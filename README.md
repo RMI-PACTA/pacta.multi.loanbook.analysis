@@ -1,13 +1,13 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-# pacta.aggregate.loanbook.plots
+# pacta.multi.loanbook.analysis
 
 <!-- badges: start -->
 
 [![Lifecycle:
 experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://lifecycle.r-lib.org/articles/stages.html#experimental)
-[![R-CMD-check](https://github.com/RMI-PACTA/pacta.aggregate.loanbook.plots/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/RMI-PACTA/pacta.aggregate.loanbook.plots/actions/workflows/R-CMD-check.yaml)
+[![R-CMD-check](https://github.com/RMI-PACTA/pacta.multi.loanbook.analysis/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/RMI-PACTA/pacta.multi.loanbook.analysis/actions/workflows/R-CMD-check.yaml)
 <!-- badges: end -->
 
 This repository hosts all R functions needed to calculate aggregate

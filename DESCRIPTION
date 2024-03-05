@@ -1,6 +1,6 @@
-Package: pacta.aggregate.loanbook.plots
-Title: Functions to Help Interpret PACTA for Banks Results for Many Institutions
-Version: 0.0.0.9001
+Package: pacta.multi.loanbook.analysis
+Title: Tools to Calculate Climate Metrics for Multiple Loanbooks
+Version: 0.0.0.9000
 Authors@R: 
     c(person(given = "Jacob",
              family = "Kastl",
@@ -40,5 +40,5 @@ Suggests:
     testthat (>= 3.0.0)
 Config/Needs/website: rmi-pacta/pacta.pkgdown.rmitemplate
 VignetteBuilder: knitr
-URL: https://rmi-pacta.github.io/pacta.aggregate.loanbook.plots/
+URL: https://rmi-pacta.github.io/pacta.multi.loanbook.analysis/
 Config/testthat/edition: 3

@@ -7,6 +7,6 @@
 # * https://testthat.r-lib.org/reference/test_package.html#special-files
 
 library(testthat)
-library(pacta.aggregate.loanbook.plots)
+library(pacta.multi.loanbook.analysis)
 
-test_check("pacta.aggregate.loanbook.plots")
+test_check("pacta.multi.loanbook.analysis")

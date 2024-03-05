@@ -1,3 +1,3 @@
-url: https://rmi-pacta.github.io/pacta.aggregate.loanbook.plots
+url: https://rmi-pacta.github.io/pacta.multi.loanbook.analysis
 template:
   package: pacta.pkgdown.rmitemplate
