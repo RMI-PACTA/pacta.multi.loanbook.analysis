@@ -1,6 +1,6 @@
 Package: pacta.multi.loanbook.analysis
 Title: Tools to Calculate Climate Metrics for Multiple Loanbooks
-Version: 0.0.0.9001
+Version: 0.0.0.9000
 Authors@R: 
     c(person(given = "Jacob",
              family = "Kastl",
