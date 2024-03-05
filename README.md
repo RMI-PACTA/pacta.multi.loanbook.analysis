@@ -1,7 +1,7 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-# pacta.aggregate.loanbook.plots
+# pacta.multi.loanbook.analysis
 
 <!-- badges: start -->
 
