@@ -44,5 +44,5 @@ object of type "ggplot"
 Plot alignment timeline
 }
 \examples{
-#TODO
+# TODO
 }

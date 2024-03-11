@@ -43,5 +43,5 @@ data.frame
 Prepare data to plot scatterplot
 }
 \examples{
-#TODO
+# TODO
 }
