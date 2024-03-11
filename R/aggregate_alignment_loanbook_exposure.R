@@ -65,7 +65,7 @@ aggregate_alignment_loanbook_exposure <- function(data,
     sector_aggregate_exposure_loanbook_summary_value <- aggregate_exposure_company %>%
       dplyr::mutate(
         sum_loan_size_outstanding = sum(.data$loan_size_outstanding, na.rm = TRUE),
-        .by = group_vars
+        .by = dplyr::all_of(group_vars)
       ) %>%
       dplyr::mutate(
         exposure_companies_aligned = dplyr::if_else(.data$alignment_metric >= 0, .data$loan_size_outstanding, 0)

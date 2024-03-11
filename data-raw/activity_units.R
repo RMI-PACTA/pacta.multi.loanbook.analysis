@@ -16,4 +16,4 @@ activity_units <- r2dii.data::abcd_demo %>%
   ) %>%
   dplyr::select(-"emission_factor_unit")
 
-usethis::use_data(activity_units, overwrite = TRUE)
+usethis::use_data(activity_units, internal = TRUE, overwrite = TRUE)
