@@ -1,18 +1,10 @@
 ---
 name: R
 on:
-  workflow_call:
-    inputs:
-      do-lint:
-        description: 'Flag to run `lintr`'
-        required: false
-        default: true
-        type: boolean
-      do-codecov:
-        description: 'Flag to check codecoverage and upload to codecov.io'
-        required: false
-        default: true
-        type: boolean
+  push:
+    branches:
+      - main
+  pull_request:
 
 
 jobs:
