@@ -1,0 +1,26 @@
+---
+name: R
+on:
+  workflow_call:
+    inputs:
+      do-lint:
+        description: 'Flag to run `lintr`'
+        required: false
+        default: true
+        type: boolean
+      do-codecov:
+        description: 'Flag to check codecoverage and upload to codecov.io'
+        required: false
+        default: true
+        type: boolean
+
+
+jobs:
+
+  lintr:
+    if: ${{ inputs.do-lint }}
+    uses: ./.github/workflows/R-lintr.yml
+
+  codecov:
+    if: ${{ inputs.do-codecov }}
+    uses: ./.github/workflows/R-codecov.yml
