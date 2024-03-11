@@ -16,14 +16,11 @@
 #'
 #' @examples
 #' # TODO
-plot_sankey <- function(
-    data,
-    capitalise_node_labels = TRUE,
-    save_png_to = NULL,
-    png_name = "sankey.png",
-    nodes_order_from_data = FALSE
-    ) {
-
+plot_sankey <- function(data,
+                        capitalise_node_labels = TRUE,
+                        save_png_to = NULL,
+                        png_name = "sankey.png",
+                        nodes_order_from_data = FALSE) {
   check_plot_sankey(data, capitalise_node_labels)
 
   if (capitalise_node_labels) {
@@ -31,13 +28,13 @@ plot_sankey <- function(
       mutate(
         group_id = r2dii.plot::to_title(.data$group_id),
         middle_node = r2dii.plot::to_title(.data$middle_node)
-        )
-    if ("middle_node2" %in% names(data_links)) {
-    data_links <- data_links %>%
-      mutate(
-        middle_node2 = r2dii.plot::to_title(.data$middle_node2)
       )
-      }
+    if ("middle_node2" %in% names(data_links)) {
+      data_links <- data_links %>%
+        mutate(
+          middle_node2 = r2dii.plot::to_title(.data$middle_node2)
+        )
+    }
   } else {
     data_links <- data
   }
@@ -48,7 +45,7 @@ plot_sankey <- function(
       target = "middle_node",
       value = "loan_size_outstanding",
       group = "is_aligned"
-      )
+    )
 
   if ("middle_node2" %in% names(data_links)) {
     links_2 <- data_links %>%
@@ -58,7 +55,7 @@ plot_sankey <- function(
         target = "middle_node2",
         value = "loan_size_outstanding",
         group = "is_aligned"
-        )
+      )
 
     links_3 <- data_links %>%
       select(
@@ -67,20 +64,20 @@ plot_sankey <- function(
         target = "is_aligned",
         value = "loan_size_outstanding",
         group = "is_aligned"
-        )
+      )
 
     links <- bind_rows(links_1, links_2, links_3)
   } else {
-   links_2 <- data_links %>%
-    select(
-      "group_id",
-      source = "middle_node",
-      target = "is_aligned",
-      value = "loan_size_outstanding",
-      group = "is_aligned"
+    links_2 <- data_links %>%
+      select(
+        "group_id",
+        source = "middle_node",
+        target = "is_aligned",
+        value = "loan_size_outstanding",
+        group = "is_aligned"
       )
 
-   links <- bind_rows(links_1, links_2)
+    links <- bind_rows(links_1, links_2)
   }
 
   links <- links %>%
@@ -96,20 +93,20 @@ plot_sankey <- function(
   ) %>%
     mutate(
       group = case_when(
-      name %in% c("Aligned", "Not aligned", "Unknown") ~ name,
-      TRUE ~ "other"
-    )
+        name %in% c("Aligned", "Not aligned", "Unknown") ~ name,
+        TRUE ~ "other"
+      )
     )
 
   my_color <- 'd3.scaleOrdinal() .domain(["Not aligned", "Aligned", "Unknown", "other"]) .range(["#e10000","#3d8c40", "#808080", "#808080"])'
 
-  links$IDsource <- match(links$source, nodes$name)-1
-  links$IDtarget <- match(links$target, nodes$name)-1
+  links$IDsource <- match(links$source, nodes$name) - 1
+  links$IDtarget <- match(links$target, nodes$name) - 1
 
   if (nodes_order_from_data) {
     n_iter <- 0
   } else {
-    n_iter <- 32 #sankeyNetwork() default
+    n_iter <- 32 # sankeyNetwork() default
   }
 
   p <- networkD3::sankeyNetwork(
@@ -119,12 +116,12 @@ plot_sankey <- function(
     Target = "IDtarget",
     Value = "value",
     NodeID = "name",
-    colourScale=my_color,
-    LinkGroup="group",
-    NodeGroup="group",
+    colourScale = my_color,
+    LinkGroup = "group",
+    NodeGroup = "group",
     fontSize = 14,
     iterations = n_iter
-    )
+  )
 
   if (!is.null(save_png_to)) {
     # you save it as an html
@@ -148,6 +145,7 @@ check_plot_sankey <- function(data, capitalise_node_labels) {
   r2dii.plot:::abort_if_missing_names(data, crucial_names)
   if (!is.logical(capitalise_node_labels)) {
     abort(c("`capitalise_node_labels` must have a logical value.",
-               x = glue("You provided: {capitalise_node_labels}.")))
+      x = glue("You provided: {capitalise_node_labels}.")
+    ))
   }
 }

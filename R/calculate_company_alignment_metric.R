@@ -388,7 +388,7 @@ calculate_company_aggregate_alignment_sda <- function(data,
   data <- data %>%
     add_net_absolute_scenario_value(target_scenario = target_scenario) %>%
     add_total_deviation_sda() %>%
-    calculate_company_alignment_metric(scenario = scenario)  %>%
+    calculate_company_alignment_metric(scenario = scenario) %>%
     dplyr::arrange(
       .data$group_id,
       .data$sector,
@@ -413,7 +413,8 @@ prep_and_wrangle_aggregate_alignment_sda <- function(data,
       dplyr::between(
         .data$year,
         left = .env$start_year,
-        right = .env$start_year + .env$time_frame)
+        right = .env$start_year + .env$time_frame
+      )
     ) %>%
     tidyr::pivot_wider(
       names_from = "emission_factor_metric",
@@ -462,7 +463,7 @@ validate_input_calculate_company_tech_deviation <- function(data,
     stop(
       paste0(
         "input value of `scenario_source` not found in `data`. You provided ",
-        scenario_source,". Available values are: ",
+        scenario_source, ". Available values are: ",
         toString(unique(data$scenario_source))
       )
     )
@@ -471,7 +472,7 @@ validate_input_calculate_company_tech_deviation <- function(data,
     stop(
       paste0(
         "input value of `scenario` not matched to any sub string in
-        `data$metric`. You provided ", scenario,". Available values are: ",
+        `data$metric`. You provided ", scenario, ". Available values are: ",
         data %>%
           dplyr::filter(grepl("target_", .data$metric)) %>%
           dplyr::pull(.data$metric) %>%
@@ -486,7 +487,7 @@ validate_input_calculate_company_tech_deviation <- function(data,
     stop(
       paste0(
         "input value of `scenario_source` not found in `technology_direction`
-        dataset. You provided ", scenario_source,". Available values are: ",
+        dataset. You provided ", scenario_source, ". Available values are: ",
         toString(unique(technology_direction$scenario_source))
       )
     )
@@ -495,7 +496,7 @@ validate_input_calculate_company_tech_deviation <- function(data,
     stop(
       paste0(
         "input value of `scenario` not found in `technology_direction`
-        dataset. You provided ", scenario,". Available values are: ",
+        dataset. You provided ", scenario, ". Available values are: ",
         toString(unique(technology_direction$scenario))
       )
     )
@@ -620,7 +621,7 @@ check_consistency_calculate_company_aggregate_alignment_tms <- function(data,
     stop(
       paste0(
         "input value of `scenario_source` not found in `data$scenario_source`. You provided ",
-        scenario_source,". Available values are: ", toString(unique(data$scenario_source))
+        scenario_source, ". Available values are: ", toString(unique(data$scenario_source))
       )
     )
   }
@@ -699,7 +700,7 @@ check_consistency_calculate_company_aggregate_alignment_sda <- function(data,
     stop(
       paste0(
         "input value of `scenario_source` not found in `data$scenario_source`. You provided: ",
-        scenario_source,". Available values are: ", toString(unique(data$scenario_source))
+        scenario_source, ". Available values are: ", toString(unique(data$scenario_source))
       )
     )
   }
@@ -712,7 +713,7 @@ check_consistency_calculate_company_aggregate_alignment_sda <- function(data,
     stop(
       paste0(
         "input value of `scenario` not found in `data$emission_factor_metric`. You provided ",
-        scenario,". Available values are: ", toString(available_scenarios)
+        scenario, ". Available values are: ", toString(available_scenarios)
       )
     )
   }
