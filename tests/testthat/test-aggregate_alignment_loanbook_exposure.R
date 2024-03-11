@@ -110,4 +110,3 @@ test_that("net aggregate results have the same columns as buildout/phaseout aggr
     names(test_output_aggregate_alignment_loanbook_exposure_net)
   )
 })
-

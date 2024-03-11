@@ -136,7 +136,7 @@ validate_input_create_benchmark_loanbook <- function(data,
     stop(
       paste0(
         "input value of `scenario_source` not found in `region_isos$source`. You provided ",
-        scenario_source,". Available values are: ",
+        scenario_source, ". Available values are: ",
         toString(unique(region_isos$source))
       )
     )
@@ -148,7 +148,7 @@ validate_input_create_benchmark_loanbook <- function(data,
     stop(
       paste0(
         "input value of `benchmark_region` not found in `region_isos$region` for the given `scenario_source`. You provided ",
-        benchmark_region,". Available values are: ",
+        benchmark_region, ". Available values are: ",
         toString(unique(available_regions$region)), ". For the selected scenario_source: ",
         scenario_source, ", the following input region cannot be found: ",
         setdiff(benchmark_region, unique(available_regions$region)),
@@ -160,7 +160,7 @@ validate_input_create_benchmark_loanbook <- function(data,
     stop(
       paste0(
         "input value of `start_year` not found in `data$year`. You provided ",
-        start_year,". Available values are: ", toString(unique(data$year))
+        start_year, ". Available values are: ", toString(unique(data$year))
       )
     )
   }
@@ -213,4 +213,3 @@ validate_input_data_create_benchmark_loanbook <- function(data,
 
   invisible()
 }
-

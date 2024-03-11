@@ -39,5 +39,5 @@ data.frame
 Prepare data to plot animated scatterplot
 }
 \examples{
-#TODO
+# TODO
 }

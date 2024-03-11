@@ -19,24 +19,22 @@
 #' @export
 #'
 #' @examples
-#' #TODO
-prep_scatter <- function(
-    data_bopo,
-    data_net,
-    data_level = c("bank", "company"),
-    year,
-    sector,
-    region,
-    group_ids_to_plot = NULL
-    ) {
+#' # TODO
+prep_scatter <- function(data_bopo,
+                         data_net,
+                         data_level = c("bank", "company"),
+                         year,
+                         sector,
+                         region,
+                         group_ids_to_plot = NULL) {
   arg_match(data_level)
 
   if (data_level == "bank") {
-    name_col = "group_id"
-    value_col = "exposure_weighted_net_alignment"
+    name_col <- "group_id"
+    value_col <- "exposure_weighted_net_alignment"
   } else {
-    name_col = "name_abcd"
-    value_col = "alignment_metric"
+    name_col <- "name_abcd"
+    value_col <- "alignment_metric"
   }
 
   check_prep_scatter(data_bopo, year, sector, region, group_ids_to_plot, name_col, value_col)
@@ -53,7 +51,7 @@ prep_scatter <- function(
       .data$sector == .env$sector,
       .data$region == .env$region,
       .data$group_id %in% group_ids_to_plot
-      ) %>%
+    ) %>%
     select("name" = name_col, "direction", "value" = value_col) %>%
     distinct() %>%
     tidyr::pivot_wider(names_from = "direction", values_from = "value") %>%
@@ -69,11 +67,11 @@ prep_scatter <- function(
   data_scatter
 }
 
-check_prep_scatter <- function(
-    data, year, sector, region, group_ids_to_plot, name_col, value_col
-    ) {
-  r2dii.plot:::abort_if_missing_names(data, c("group_id", "year",
-   "sector", "region", "direction", name_col, value_col))
+check_prep_scatter <- function(data, year, sector, region, group_ids_to_plot, name_col, value_col) {
+  r2dii.plot:::abort_if_missing_names(data, c(
+    "group_id", "year",
+    "sector", "region", "direction", name_col, value_col
+  ))
   r2dii.plot:::abort_if_unknown_values(sector, data, "sector")
   r2dii.plot:::abort_if_unknown_values(region, data, "region")
   r2dii.plot:::abort_if_unknown_values(year, data, "year")

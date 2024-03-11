@@ -26,20 +26,18 @@
 #' @export
 #'
 #' @examples
-#' #TODO
-plot_scatter_animated <- function(
-    data,
-    data_level = c("company", "bank"),
-    sector = NULL,
-    scenario_source = NULL,
-    scenario = NULL,
-    region = NULL,
-    title = NULL,
-    subtitle = NULL,
-    alignment_limit = NULL,
-    cap_outliers = NULL,
-    floor_outliers = NULL
-    ) {
+#' # TODO
+plot_scatter_animated <- function(data,
+                                  data_level = c("company", "bank"),
+                                  sector = NULL,
+                                  scenario_source = NULL,
+                                  scenario = NULL,
+                                  region = NULL,
+                                  title = NULL,
+                                  subtitle = NULL,
+                                  alignment_limit = NULL,
+                                  cap_outliers = NULL,
+                                  floor_outliers = NULL) {
   arg_match(data_level)
 
   caption <- ""
@@ -50,7 +48,7 @@ plot_scatter_animated <- function(
     if (!is.null(scenario_source)) {
       caption <- glue("{caption}Scenario source: {beautify_scenario_label(scenario_source)}\n", .trim = FALSE)
     }
-    if(!is.null(region)) {
+    if (!is.null(region)) {
       caption <- glue("{caption}Region: {r2dii.plot::to_title(region)}", .trim = FALSE)
     }
   } else {
@@ -79,7 +77,7 @@ plot_scatter_animated <- function(
 
   check_plot_scatter_animated(data, alignment_limit, cap_outliers, floor_outliers)
 
-  if(!is.null(floor_outliers)) {
+  if (!is.null(floor_outliers)) {
     data <- data %>%
       mutate(
         buildout = if_else(.data$buildout <= .env$floor_outliers, .env$floor_outliers, .data$buildout),
@@ -88,7 +86,7 @@ plot_scatter_animated <- function(
           .data$buildout <= .env$floor_outliers | .data$phaseout <= .env$floor_outliers,
           .data$buildout + .data$phaseout,
           .data$net
-          ) # net is a sum of buildout and phaseout
+        ) # net is a sum of buildout and phaseout
       )
     subtitle <- glue("{subtitle}\nThe outliers are displayed on the borders of the plot.", .trim = FALSE)
   }
@@ -101,7 +99,7 @@ plot_scatter_animated <- function(
           .data$buildout >= .env$cap_outliers | .data$phaseout >= .env$cap_outliers,
           .data$buildout + .data$phaseout,
           .data$net
-          ) # net is a sum of buildout and phaseout
+        ) # net is a sum of buildout and phaseout
       )
     if (is.null(floor_outliers)) {
       subtitle <- glue("{subtitle}\nThe outliers are displayed on the borders of the plot.", .trim = FALSE)
@@ -125,7 +123,7 @@ plot_scatter_animated <- function(
       color = ~net,
       colors = colorRamp(c("#e10000", "#FFFFFF", "#3d8c40")),
       symbol = ~datapoint,
-      symbols = c("circle", "circle", "circle","circle-open"),
+      symbols = c("circle", "circle", "circle", "circle-open"),
       width = 600,
       height = 800
     )
@@ -138,7 +136,7 @@ plot_scatter_animated <- function(
       color = ~net,
       colors = colorRamp(c("#e10000", "#FFFFFF", "#3d8c40")),
       symbol = ~datapoint,
-      symbols = c("circle", "circle", "circle","circle-open"),
+      symbols = c("circle", "circle", "circle", "circle-open"),
       width = 600,
       height = 800
     )
@@ -154,10 +152,12 @@ plot_scatter_animated <- function(
         cmid = 0,
         cmax = alignment_limit_net
       ),
-      hovertemplate = paste("<b>%{text}:</b>",
-                        "<br>Build-out: %{x}<br>",
-                        "Phase-out: %{y}<br>",
-                        "Net: %{marker.color:.0%}"),
+      hovertemplate = paste(
+        "<b>%{text}:</b>",
+        "<br>Build-out: %{x}<br>",
+        "Phase-out: %{y}<br>",
+        "Net: %{marker.color:.0%}"
+      ),
     ) %>%
     plotly::add_annotations(
       text = "Aligned buildout,\nAligned phaseout",
@@ -228,7 +228,7 @@ plot_scatter_animated <- function(
       limits = c(-alignment_limit_net, alignment_limit_net),
       title = "Net\ndeviation",
       tickformat = ",.0%"
-      ) %>%
+    ) %>%
     plotly::layout(
       title = list(
         text = title,
@@ -237,29 +237,29 @@ plot_scatter_animated <- function(
         yanchor = "top",
         yref = "container",
         y = 0.95
-        ),
+      ),
       xaxis = list(
         title = list(
           text = "Deviation from scenario value\nfor low-carbon technologies build-out",
           font = list(color = "#000")
-          ),
+        ),
         range = c(-alignment_limit, alignment_limit),
         color = "#c0c0c0",
         tickfont = list(color = "#000"),
         showgrid = FALSE,
         tickformat = ",.0%"
-        ),
+      ),
       yaxis = list(
         title = list(
           text = "Deviation from scenario value\nfor high-carbon technologies phase-out",
           font = list(color = "#000")
-          ),
+        ),
         range = c(-alignment_limit, alignment_limit),
         color = "#c0c0c0",
         tickfont = list(color = "#000"),
         showgrid = FALSE,
         tickformat = ",.0%"
-        ),
+      ),
       plot_bgcolor = "#6c6c6c",
       autosize = F,
       margin = list(l = 0, r = 0, t = 170, b = 250),
@@ -282,26 +282,26 @@ plot_scatter_animated <- function(
   p
 }
 
-check_plot_scatter_animated <- function(
-    data,
-    alignment_limit,
-    cap_outliers,
-    floor_outliers
-    ) {
-  r2dii.plot:::abort_if_missing_names(data, c("name", "buildout",
-   "phaseout", "net", "year"))
+check_plot_scatter_animated <- function(data,
+                                        alignment_limit,
+                                        cap_outliers,
+                                        floor_outliers) {
+  r2dii.plot:::abort_if_missing_names(data, c(
+    "name", "buildout",
+    "phaseout", "net", "year"
+  ))
   if (!is.null(alignment_limit)) {
-    if ((length(alignment_limit) != 1) | (!is.numeric(alignment_limit))){
+    if ((length(alignment_limit) != 1) | (!is.numeric(alignment_limit))) {
       rlang::abort("'alignment_limit' must be a numeric value.")
     }
   }
   if (!is.null(cap_outliers)) {
-    if ((length(cap_outliers) != 1) | (!is.numeric(cap_outliers))){
-     rlang::abort("'cap_outliers' must be a numeric value.")
+    if ((length(cap_outliers) != 1) | (!is.numeric(cap_outliers))) {
+      rlang::abort("'cap_outliers' must be a numeric value.")
     }
   }
   if (!is.null(floor_outliers)) {
-    if ((length(floor_outliers) != 1) | (!is.numeric(floor_outliers))){
+    if ((length(floor_outliers) != 1) | (!is.numeric(floor_outliers))) {
       rlang::abort("'floor_outliers' must be a numeric value.")
     }
   }

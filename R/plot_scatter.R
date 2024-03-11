@@ -26,21 +26,19 @@
 #' @export
 #'
 #' @examples
-#' #TODO
-plot_scatter <- function(
-    data,
-    sector = NULL,
-    scenario_source = NULL,
-    scenario = NULL,
-    year = NULL,
-    region = NULL,
-    title = NULL,
-    subtitle = NULL,
-    alignment_limit = NULL,
-    data_level = c("company", "bank"),
-    cap_outliers = NULL,
-    floor_outliers = NULL
-    ) {
+#' # TODO
+plot_scatter <- function(data,
+                         sector = NULL,
+                         scenario_source = NULL,
+                         scenario = NULL,
+                         year = NULL,
+                         region = NULL,
+                         title = NULL,
+                         subtitle = NULL,
+                         alignment_limit = NULL,
+                         data_level = c("company", "bank"),
+                         cap_outliers = NULL,
+                         floor_outliers = NULL) {
   arg_match(data_level)
 
   caption <- ""
@@ -54,7 +52,7 @@ plot_scatter <- function(
     if (!is.null(year)) {
       caption <- glue("{caption}Alignment assessed in year: {year}\n", .trim = FALSE)
     }
-    if(!is.null(region)) {
+    if (!is.null(region)) {
       caption <- glue("{caption}Region: {r2dii.plot::to_title(region)}", .trim = FALSE)
     }
   } else {
@@ -83,7 +81,7 @@ plot_scatter <- function(
 
   check_plot_scatter(data, alignment_limit, cap_outliers, floor_outliers)
 
-  if(!is.null(floor_outliers)) {
+  if (!is.null(floor_outliers)) {
     data <- data %>%
       mutate(
         buildout = if_else(.data$buildout <= .env$floor_outliers, .env$floor_outliers, .data$buildout),
@@ -126,7 +124,7 @@ plot_scatter <- function(
       color = "white",
       angle = -45,
       size = 3
-      ) +
+    ) +
     annotate(
       geom = "text",
       x = alignment_limit * 0.97,
@@ -135,7 +133,7 @@ plot_scatter <- function(
       color = "#c0c0c0",
       size = 3,
       hjust = 1
-      ) +
+    ) +
     annotate(
       geom = "text",
       x = -alignment_limit * 0.03,
@@ -144,7 +142,7 @@ plot_scatter <- function(
       color = "#c0c0c0",
       size = 3,
       hjust = 1
-      ) +
+    ) +
     annotate(
       geom = "text",
       x = -alignment_limit * 0.97,
@@ -153,7 +151,7 @@ plot_scatter <- function(
       color = "#c0c0c0",
       size = 3,
       hjust = 0
-      ) +
+    ) +
     annotate(
       geom = "text",
       x = alignment_limit * 0.03,
@@ -162,20 +160,20 @@ plot_scatter <- function(
       color = "#c0c0c0",
       size = 3,
       hjust = 0
-      ) +
+    ) +
     geom_point(aes(shape = .data$datapoint)) +
     scale_x_continuous(
       name = "Deviation from scenario value\nfor low-carbon technologies build-out",
       labels = scales::percent,
       limits = c(-alignment_limit, alignment_limit),
       expand = expansion(mult = 0)
-      ) +
+    ) +
     scale_y_continuous(
       name = "Deviation from scenario value\nfor high-carbon technologies phase-out",
       labels = scales::percent,
       limits = c(-alignment_limit, alignment_limit),
       expand = expansion(mult = 0)
-      ) +
+    ) +
     scale_colour_gradient2(
       name = "Net\ndeviation",
       low = "#e10000",
@@ -195,7 +193,7 @@ plot_scatter <- function(
       panel.background = element_rect(fill = "#6c6c6c"),
       legend.title = element_text(),
       aspect.ratio = 1
-      ) +
+    ) +
     labs(
       title = title,
       subtitle = subtitle,
@@ -213,20 +211,22 @@ plot_scatter <- function(
 }
 
 check_plot_scatter <- function(data, alignment_limit, cap_outliers, floor_outliers) {
-  r2dii.plot:::abort_if_missing_names(data, c("name", "buildout",
-   "phaseout", "net"))
+  r2dii.plot:::abort_if_missing_names(data, c(
+    "name", "buildout",
+    "phaseout", "net"
+  ))
   if (!is.null(alignment_limit)) {
-    if ((length(alignment_limit) != 1) | (!is.numeric(alignment_limit))){
+    if ((length(alignment_limit) != 1) | (!is.numeric(alignment_limit))) {
       rlang::abort("'alignment_limit' must be a numeric value.")
     }
   }
   if (!is.null(cap_outliers)) {
-    if ((length(cap_outliers) != 1) | (!is.numeric(cap_outliers))){
-     rlang::abort("'cap_outliers' must be a numeric value.")
+    if ((length(cap_outliers) != 1) | (!is.numeric(cap_outliers))) {
+      rlang::abort("'cap_outliers' must be a numeric value.")
     }
   }
   if (!is.null(floor_outliers)) {
-    if ((length(floor_outliers) != 1) | (!is.numeric(floor_outliers))){
+    if ((length(floor_outliers) != 1) | (!is.numeric(floor_outliers))) {
       rlang::abort("'floor_outliers' must be a numeric value.")
     }
   }

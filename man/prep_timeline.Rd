@@ -23,5 +23,5 @@ data.frame
 Prepare data to plot timeline
 }
 \examples{
-#TODO
+# TODO
 }

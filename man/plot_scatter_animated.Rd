@@ -58,5 +58,5 @@ object of type "plotly"
 Plot alignment scatterplot
 }
 \examples{
-#TODO
+# TODO
 }

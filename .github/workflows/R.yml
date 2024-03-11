@@ -1,0 +1,13 @@
+---
+name: R
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+
+jobs:
+  R-package:
+    name: R Package Checks
+    uses: RMI-PACTA/actions/.github/workflows/R.yml@main

@@ -10,7 +10,7 @@
 #' @export
 #'
 #' @examples
-#' #TODO
+#' # TODO
 prep_timeline <- function(data, sector, region, group_ids_to_plot) {
   check_prep_timeline(data, sector, region, group_ids_to_plot)
 
@@ -24,10 +24,11 @@ prep_timeline <- function(data, sector, region, group_ids_to_plot) {
 }
 
 check_prep_timeline <- function(data, sector, region, group_ids_to_plot) {
-  r2dii.plot:::abort_if_missing_names(data, c("direction", "year",
-   "exposure_weighted_net_alignment", "group_id", "sector"))
+  r2dii.plot:::abort_if_missing_names(data, c(
+    "direction", "year",
+    "exposure_weighted_net_alignment", "group_id", "sector"
+  ))
   r2dii.plot:::abort_if_unknown_values(sector, data, "sector")
   r2dii.plot:::abort_if_unknown_values(region, data, "region")
   r2dii.plot:::abort_if_unknown_values(group_ids_to_plot, data, "group_id")
 }
-

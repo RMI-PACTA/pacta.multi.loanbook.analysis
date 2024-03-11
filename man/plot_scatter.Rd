@@ -60,5 +60,5 @@ object of type "ggplot"
 Plot alignment scatterplot
 }
 \examples{
-#TODO
+# TODO
 }
