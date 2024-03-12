@@ -51,6 +51,7 @@ create_benchmark_loanbook <- function(data,
     dplyr::distinct(.data$company_id, .data$name_company, .data$lei, .data$code)
 
   # keep only the companies that have production in the provided region
+  # nolint start: object_usage_linter.
   benchmark_countries <- region_isos %>%
     dplyr::filter(
       .data$source == .env$scenario_source,
@@ -58,6 +59,7 @@ create_benchmark_loanbook <- function(data,
     ) %>%
     dplyr::pull(.data$isos) %>%
     toupper()
+  # nolint end
 
   benchmark_companies <- data %>%
     dplyr::filter(
@@ -197,7 +199,7 @@ validate_input_data_create_benchmark_loanbook <- function(data,
                                                           region_isos) {
   validate_data_has_expected_cols(
     data = data,
-    expected_columns <- c(
+    expected_columns = c(
       "company_id", "name_company", "lei", "is_ultimate_owner", "sector",
       "technology", "plant_location", "year", "production", "production_unit",
       "emission_factor", "emission_factor_unit", "ald_timestamp"

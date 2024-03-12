@@ -150,14 +150,14 @@ validate_input_data_aggregate_alignment_loanbook_exposure <- function(data,
                                                                       group_vars) {
   validate_data_has_expected_cols(
     data = data,
-    expected_columns <- c(
+    expected_columns = c(
       group_vars, "name_abcd", "activity_unit", "scenario_source", "alignment_metric"
     )
   )
 
   validate_data_has_expected_cols(
     data = matched,
-    expected_columns <- c(
+    expected_columns = c(
       "group_id", "id_loan", "loan_size_outstanding",
       "loan_size_outstanding_currency", "name_abcd", "sector"
     )
