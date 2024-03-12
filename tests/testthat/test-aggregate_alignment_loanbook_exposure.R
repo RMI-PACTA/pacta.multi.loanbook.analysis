@@ -1,5 +1,6 @@
 # aggregate_alignment_loanbook_exposure----
 
+# nolint start: indentation_linter.
 # styler: off
 test_data_aggregate_alignment_loanbook_exposure_net <- tibble::tribble(
      ~group_id, ~name_abcd,       ~sector, ~activity_unit,  ~region, ~scenario_source,       ~scenario, ~year, ~direction, ~total_deviation, ~alignment_metric,
@@ -110,3 +111,4 @@ test_that("net aggregate results have the same columns as buildout/phaseout aggr
     names(test_output_aggregate_alignment_loanbook_exposure_net)
   )
 })
+# nolint end

@@ -1,4 +1,6 @@
 # calculate_company_tech_deviation----
+
+# nolint start: indentation_linter.
 # styler: off
 test_data_calculate_company_tech_deviation <- tibble::tribble(
        ~sector, ~technology, ~year,  ~region,  ~scenario_source,     ~name_abcd,           ~metric, ~production, ~technology_share,       ~scope, ~percentage_of_initial_production_by_scope,    ~group_id,
@@ -9,9 +11,9 @@ test_data_calculate_company_tech_deviation <- tibble::tribble(
 )
 
 test_technology_direction <- tibble::tribble(
-   ~scenario_source,  ~scenario,      ~sector, ~technology, ~region, ~directional_dummy,
-  "scenario_source", "scenario", "automotive", "electric",  "global",                 1,
-  "scenario_source", "scenario", "automotive",      "ice",  "global",                -1
+   ~scenario_source,  ~scenario,      ~sector, ~technology,   ~region, ~directional_dummy,
+  "scenario_source", "scenario", "automotive",  "electric",  "global",                  1,
+  "scenario_source", "scenario", "automotive",       "ice",  "global",                 -1
 )
 # styler: on
 
@@ -640,3 +642,4 @@ test_that("add_total_deviation_sda produces expected deviations", {
     c(-0.1, -0.3, 0.1)
   )
 })
+# nolint end
