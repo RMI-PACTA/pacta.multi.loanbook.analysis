@@ -1,4 +1,6 @@
 # calculate_company_tech_deviation----
+
+# nolint start: indentation_linter.
 # styler: off
 test_data_calculate_company_tech_deviation <- tibble::tribble(
        ~sector, ~technology, ~year,  ~region,  ~scenario_source,     ~name_abcd,           ~metric, ~production, ~technology_share,       ~scope, ~percentage_of_initial_production_by_scope,    ~group_id,
@@ -9,9 +11,9 @@ test_data_calculate_company_tech_deviation <- tibble::tribble(
 )
 
 test_technology_direction <- tibble::tribble(
-   ~scenario_source,  ~scenario,      ~sector, ~technology, ~region, ~directional_dummy,
-  "scenario_source", "scenario", "automotive", "electric",  "global",                 1,
-  "scenario_source", "scenario", "automotive",      "ice",  "global",                -1
+   ~scenario_source,  ~scenario,      ~sector, ~technology,   ~region, ~directional_dummy,
+  "scenario_source", "scenario", "automotive",  "electric",  "global",                  1,
+  "scenario_source", "scenario", "automotive",       "ice",  "global",                 -1
 )
 # styler: on
 
@@ -170,7 +172,7 @@ test_that("only company sector combinations with zero values in all target rows 
 ## add_total_tech_deviation----
 # styler: off
 test_data_add_total_tech_deviation <- tibble::tribble(
-  ~projected,~target_scenario, ~directional_dummy,
+  ~projected, ~target_scenario, ~directional_dummy,
           25,              20,                  1,
           25,              20,                 -1
 )
@@ -311,9 +313,7 @@ test_that("calculate_company_aggregate_alignment_tms returns coorect number of r
 
 test_that("calculate_company_aggregate_alignment_tms returns expected values", {
   expect_equal(test_output_calculate_company_aggregate_alignment_tms_1$total_deviation, c(-28, -25))
-  # expect_equal(test_output_calculate_company_aggregate_alignment_tms_1$total_deviation, sum(test_data_calculate_company_aggregate_alignment_tms$total_tech_deviation))
   expect_equal(test_output_calculate_company_aggregate_alignment_tms_2$total_deviation, c(-8, -20, -25, 0))
-  # expect_equal(test_output_calculate_company_aggregate_alignment_tms_2$total_deviation, test_data_calculate_company_aggregate_alignment_tms$total_tech_deviation)
 })
 
 ## check_consistency_calculate_company_aggregate_alignment_tms----
@@ -642,3 +642,4 @@ test_that("add_total_deviation_sda produces expected deviations", {
     c(-0.1, -0.3, 0.1)
   )
 })
+# nolint end

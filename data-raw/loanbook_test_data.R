@@ -1,3 +1,4 @@
+# nolint start: commented_code_linter, line_length_linter
 # styler: off
 loanbook_test_data <- tibble::tribble(
   ~id_loan, ~id_direct_loantaker, ~name_direct_loantaker, ~id_intermediate_parent_1, ~name_intermediate_parent_1, ~id_ultimate_parent, ~name_ultimate_parent, ~loan_size_outstanding, ~loan_size_outstanding_currency, ~loan_size_credit_limit, ~loan_size_credit_limit_currency, ~sector_classification_system, ~sector_classification_input_type, ~sector_classification_direct_loantaker, ~fi_type, ~flag_project_finance_loan, ~name_project, ~lei_direct_loantaker, ~isin_direct_loantaker,
@@ -23,5 +24,6 @@ loanbook_test_data <- tibble::tribble(
   "L20", "C24", "energy_major_2", NA_character_, NA_character_, "UP24", "energy_major_2", 1000000, "USD", 1000000, "USD", "NACE", "Code", 5100, "Loan", "No", NA_character_, NA_character_, NA_character_
 )
 # styler: on
+# nolint end
 
 usethis::use_data(loanbook_test_data, overwrite = TRUE)

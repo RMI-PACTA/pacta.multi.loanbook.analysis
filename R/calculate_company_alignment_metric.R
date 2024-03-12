@@ -68,7 +68,7 @@ calculate_company_tech_deviation <- function(data,
   # add activity unit
   data <- data %>%
     dplyr::inner_join(
-      activity_units,
+      activity_units, # nolint: object_usage_linter.
       by = c("sector", "technology")
     )
 
@@ -86,7 +86,7 @@ prep_company_alignment_aggregation <- function(data,
                                                scenario_source,
                                                scenario,
                                                time_frame) {
-  start_year <- min(data$year, na.rm = TRUE)
+  start_year <- min(data$year, na.rm = TRUE) # nolint: object_usage_linter.
 
   technology_direction <- technology_direction %>%
     dplyr::filter(
@@ -240,7 +240,6 @@ calculate_company_aggregate_alignment_tms <- function(data,
     scenario = scenario
   )
 
-  start_year <- min(data$year, na.rm = TRUE)
   target_scenario <- paste0("target_", scenario)
   level <- match.arg(level)
 
@@ -325,7 +324,7 @@ fill_missing_direction <- function(data) {
   data <- data %>%
     tidyr::complete(
       tidyr::nesting(
-        group_id, name_abcd, sector, activity_unit, region, scenario_source, scenario, year
+        group_id, name_abcd, sector, activity_unit, region, scenario_source, scenario, year # nolint: object_usage_linter.
       ),
       .data$direction,
       fill = list(
@@ -378,8 +377,11 @@ calculate_company_aggregate_alignment_sda <- function(data,
     )
 
   # add activity units to data
-  activity_units_sector <- activity_units %>%
-    dplyr::distinct(.data$sector, .data$activity_unit)
+  activity_units_sector <- dplyr::distinct(
+    activity_units, # nolint: object_usage_linter.
+    .data$sector,
+    .data$activity_unit
+  )
 
   data <- data %>%
     dplyr::inner_join(activity_units_sector, by = "sector")
@@ -684,7 +686,7 @@ validate_input_args_calculate_company_aggregate_alignment_sda <- function(scenar
 validate_input_data_calculate_company_aggregate_alignment_sda <- function(data) {
   validate_data_has_expected_cols(
     data = data,
-    expected_columns <- c(
+    expected_columns = c(
       "sector", "year", "region", "scenario_source", "name_abcd",
       "emission_factor_metric", "emission_factor_value", "group_id"
     )

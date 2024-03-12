@@ -1,3 +1,4 @@
+# nolint start: commented_code_linter, line_length_linter
 # styler: off
 abcd_test_data <- tibble::tribble(
   ~company_id, ~name_company, ~lei, ~is_ultimate_owner, ~sector, ~technology, ~plant_location, ~year, ~production, ~production_unit, ~emission_factor, ~emission_factor_unit, ~ald_timestamp,
@@ -585,5 +586,6 @@ abcd_test_data <- tibble::tribble(
   24L, "energy_major_2", NA_character_, TRUE, "coal", "coal", "FR", 2027, 4850000, "tonnes per year", NA_real_, NA_character_, "2022 Q4"
 )
 # styler: on
+# nolint end
 
 usethis::use_data(abcd_test_data, overwrite = TRUE)
