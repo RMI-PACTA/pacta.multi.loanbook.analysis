@@ -321,6 +321,11 @@ calculate_company_alignment_metric <- function(data,
 }
 
 fill_missing_direction <- function(data) {
+  # there is currently no way to use data masking inside tidyr::nesting()
+  # see https://github.com/tidyverse/tidyr/issues/971#issuecomment-985671947
+  # the following line is a workaround to avoid the R CMD NOTE
+  group_id <- name_abcd <- sector <- activity_unit <- region <- scenario_source <- scenario <- year <- NULL
+
   data <- data %>%
     tidyr::complete(
       tidyr::nesting(
