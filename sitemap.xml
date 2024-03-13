@@ -52,28 +52,7 @@
     <loc>https://rmi-pacta.github.io/pacta.multi.loanbook.analysis/reference/loanbook_test_data.html</loc>
   </url>
   <url>
-    <loc>https://rmi-pacta.github.io/pacta.multi.loanbook.analysis/reference/plot_sankey.html</loc>
-  </url>
-  <url>
-    <loc>https://rmi-pacta.github.io/pacta.multi.loanbook.analysis/reference/plot_scatter.html</loc>
-  </url>
-  <url>
-    <loc>https://rmi-pacta.github.io/pacta.multi.loanbook.analysis/reference/plot_scatter_animated.html</loc>
-  </url>
-  <url>
-    <loc>https://rmi-pacta.github.io/pacta.multi.loanbook.analysis/reference/plot_timeline.html</loc>
-  </url>
-  <url>
-    <loc>https://rmi-pacta.github.io/pacta.multi.loanbook.analysis/reference/prep_sankey.html</loc>
-  </url>
-  <url>
     <loc>https://rmi-pacta.github.io/pacta.multi.loanbook.analysis/reference/prep_scatter.html</loc>
-  </url>
-  <url>
-    <loc>https://rmi-pacta.github.io/pacta.multi.loanbook.analysis/reference/prep_scatter_animated.html</loc>
-  </url>
-  <url>
-    <loc>https://rmi-pacta.github.io/pacta.multi.loanbook.analysis/reference/prep_timeline.html</loc>
   </url>
   <url>
     <loc>https://rmi-pacta.github.io/pacta.multi.loanbook.analysis/reference/validate_data_has_expected_cols.html</loc>
