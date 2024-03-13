@@ -19,18 +19,13 @@ Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.2.3
 Imports: 
     dplyr,
-    ggplot2,
     glue,
-    networkD3,
     r2dii.data,
     r2dii.plot,
     readr,
     rlang,
     tidyr,
-    tibble,
-    webshot,
-    plotly,
-    scales
+    tibble
 Depends: 
     R (>= 2.10)
 LazyData: true
