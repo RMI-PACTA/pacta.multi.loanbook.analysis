@@ -36,7 +36,7 @@ create_benchmark_loanbook <- function(data,
   benchmark_sectors <- r2dii.data::nace_classification %>%
     dplyr::filter(.data$borderline == FALSE) %>%
     dplyr::group_by(.data$sector) %>%
-    dplyr::slice_max(.data$code_level, n = 1) %>%
+    dplyr::slice_max(nchar(.data$code), n = 1) %>%
     dplyr::slice_head(n = 1) %>%
     dplyr::ungroup() %>%
     dplyr::select("sector", "code")
