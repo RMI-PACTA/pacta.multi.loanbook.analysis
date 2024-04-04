@@ -7,7 +7,7 @@
 
 [![Lifecycle:
 experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://lifecycle.r-lib.org/articles/stages.html#experimental)
-[![R-CMD-check](https://github.com/RMI-PACTA/pacta.multi.loanbook.analysis/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/RMI-PACTA/pacta.multi.loanbook.analysis/actions/workflows/R-CMD-check.yaml)
+[![R-CMD-check](https://github.com/RMI-PACTA/pacta.multi.loanbook.analysis/actions/workflows/R.yml/badge.svg)](https://github.com/RMI-PACTA/pacta.multi.loanbook.analysis/actions/workflows/R.yml)
 <!-- badges: end -->
 
 This repository hosts all R functions needed to calculate aggregate
