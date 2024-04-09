@@ -163,7 +163,7 @@ aggregate_alignment_loanbook_exposure <- function(data,
     ) %>%
     dplyr::relocate(
       c(
-        group_vars, "n_companies", "n_companies_aligned",
+        dplyr::all_of(group_vars), "n_companies", "n_companies_aligned",
         "share_companies_aligned", "exposure_weighted_net_alignment"
       )
     ) %>%
