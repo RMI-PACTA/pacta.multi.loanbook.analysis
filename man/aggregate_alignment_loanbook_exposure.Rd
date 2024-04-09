@@ -4,7 +4,12 @@
 \alias{aggregate_alignment_loanbook_exposure}
 \title{Return loan book level aggregation of company alignment metrics by exposure}
 \usage{
-aggregate_alignment_loanbook_exposure(data, matched, level = c("net", "bo_po"))
+aggregate_alignment_loanbook_exposure(
+  data,
+  matched,
+  level = c("net", "bo_po"),
+  group_var = NULL
+)
 }
 \arguments{
 \item{data}{data.frame. Holds output pf company indicators}
@@ -14,6 +19,13 @@ aggregate_alignment_loanbook_exposure(data, matched, level = c("net", "bo_po"))
 \item{level}{Character. Vector that indicates if the aggregate alignment
 metric should be returned based on the net technology deviations (\code{net}) or
 disaggregated into buildout and phaseout technologies (\code{bo_po}).}
+
+\item{group_var}{Character. Optional vector of length >= 1 that indicates the
+name of one or more variables the results should be aggregated by, instead
+of using group_id as the main dimension of aggregation. All names indicated
+must be available variables in the \code{matched} data set. The intended use
+case is to allow analyzing the loan books by additional traits of interest,
+such as types of financial institutions.}
 }
 \description{
 Return loan book level aggregation of company alignment metrics by exposure

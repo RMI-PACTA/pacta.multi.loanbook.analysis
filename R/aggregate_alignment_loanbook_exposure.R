@@ -5,13 +5,21 @@
 #' @param level Character. Vector that indicates if the aggregate alignment
 #'   metric should be returned based on the net technology deviations (`net`) or
 #'   disaggregated into buildout and phaseout technologies (`bo_po`).
+#' @param group_var Character. Optional vector of length >= 1 that indicates the
+#'   name of one or more variables the results should be aggregated by, instead
+#'   of using group_id as the main dimension of aggregation. All names indicated
+#'   must be available variables in the `matched` data set. The intended use
+#'   case is to allow analyzing the loan books by additional traits of interest,
+#'   such as types of financial institutions.
 #'
 #' @return NULL
 #' @export
 aggregate_alignment_loanbook_exposure <- function(data,
                                                   matched,
-                                                  level = c("net", "bo_po")) {
+                                                  level = c("net", "bo_po"),
+                                                  group_var = NULL) {
   group_vars <- c("group_id", "scenario", "region", "sector", "year", "direction")
+  group_matched <- "group_id"
   level <- rlang::arg_match(level)
 
   # validate input data sets
@@ -21,30 +29,49 @@ aggregate_alignment_loanbook_exposure <- function(data,
     group_vars = group_vars
   )
 
+  # optionally extend by `group_var`. this currently only allows aggregation of supersets for group_var
+  if (!is.null(group_var)) {
+    if (!inherits(group_var, "character")) {
+      stop(glue::glue("`group_var` must be a character vector. Your input is {class(group_var)}."))
+    }
+    group_vars <- c(group_vars[!group_vars == "group_id"], group_var)
+    group_matched <- group_var
+
+    group_id_by_group_var <- matched %>%
+      dplyr::distinct(.data$group_id, !!!rlang::syms(group_var))
+
+    data <- data %>%
+      dplyr::inner_join(
+        group_id_by_group_var,
+        by = c("group_id")
+      )
+  }
+
   matched <- matched %>%
     dplyr::select(
       dplyr::all_of(
-        c("group_id", "id_loan", "loan_size_outstanding", "loan_size_outstanding_currency", "name_abcd", "sector")
+        c(group_matched, "id_loan", "loan_size_outstanding", "loan_size_outstanding_currency", "name_abcd", "sector")
       )
     ) %>%
     dplyr::summarise(
       loan_size_outstanding = sum(.data$loan_size_outstanding, na.rm = TRUE),
-      .by = c("group_id", "loan_size_outstanding_currency", "name_abcd", "sector")
+      .by = dplyr::all_of(c(group_matched, "loan_size_outstanding_currency", "name_abcd", "sector"))
     ) %>%
     dplyr::mutate(
       exposure_weight = .data$loan_size_outstanding / sum(.data$loan_size_outstanding, na.rm = TRUE),
-      .by = c("group_id", "loan_size_outstanding_currency")
+      .by = dplyr::all_of(c(group_matched, "loan_size_outstanding_currency"))
     )
 
   aggregate_exposure_company <- data %>%
     dplyr::inner_join(
       matched,
-      by = c("group_id", "name_abcd", "sector")
+      by = c(group_matched, "name_abcd", "sector")
     )
 
   sector_aggregate_exposure_loanbook_summary <- aggregate_exposure_company %>%
     dplyr::mutate(
-      n_companies = dplyr::n(),
+      # TODO: must be n_distinct
+      n_companies = dplyr::n_distinct(.data$name_abcd),
       .by = dplyr::all_of(group_vars)
     ) %>%
     dplyr::mutate(
@@ -140,7 +167,7 @@ aggregate_alignment_loanbook_exposure <- function(data,
         "share_companies_aligned", "exposure_weighted_net_alignment"
       )
     ) %>%
-    dplyr::arrange(.data$group_id, .data$scenario, .data$region, .data$sector, .data$year)
+    dplyr::arrange(!!!rlang::syms(group_matched), .data$scenario, .data$region, .data$sector, .data$year)
 
   return(out)
 }

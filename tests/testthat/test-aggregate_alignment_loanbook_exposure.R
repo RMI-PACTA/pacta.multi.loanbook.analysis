@@ -111,4 +111,111 @@ test_that("net aggregate results have the same columns as buildout/phaseout aggr
     names(test_output_aggregate_alignment_loanbook_exposure_net)
   )
 })
+
+# When an additional variable is passed via group_var, add group_var to
+# variables considered in aggregation (GH: 33)
+
+# styler: off
+test_data_company_net <- tibble::tribble(
+  ~group_id, ~name_abcd,       ~sector, ~activity_unit,  ~region, ~scenario_source,       ~scenario, ~year, ~direction, ~total_deviation, ~alignment_metric,
+  "test_lbk_1", "test_company_1", "power",           "MW", "global",    "test_source", "test_scenario",  2027,      "net",             -110,              -0.3,
+  "test_lbk_1", "test_company_2", "power",           "MW", "global",    "test_source", "test_scenario",  2027,      "net",              -70,              -0.4,
+  "test_lbk_2", "test_company_2", "power",           "MW", "global",    "test_source", "test_scenario",  2027,      "net",              -70,              -0.4,
+  "test_lbk_2", "test_company_3", "power",           "MW", "global",    "test_source", "test_scenario",  2027,      "net",              -40,              -0.2,
+  "test_lbk_3", "test_company_3", "power",           "MW", "global",    "test_source", "test_scenario",  2027,      "net",              -40,              -0.2,
+  "test_lbk_3", "test_company_4", "power",           "MW", "global",    "test_source", "test_scenario",  2027,      "net",               50,               0.1,
+  "test_lbk_4", "test_company_4", "power",           "MW", "global",    "test_source", "test_scenario",  2027,      "net",               50,               0.1,
+  "test_lbk_4", "test_company_1", "power",           "MW", "global",    "test_source", "test_scenario",  2027,      "net",             -110,              -0.3
+)
+
+test_matched_group_var <- tibble::tribble(
+     ~group_id, ~id_loan, ~loan_size_outstanding, ~loan_size_outstanding_currency,       ~name_abcd, ~sector,  ~foo, ~bar,
+  "test_lbk_1",     "L1",                 300000,                           "USD", "test_company_1", "power", "Yes", "Yes",
+  "test_lbk_1",     "L2",                 700000,                           "USD", "test_company_2", "power", "Yes", "Yes",
+  "test_lbk_2",     "L2",                 700000,                           "USD", "test_company_2", "power",  "No", "Yes",
+  "test_lbk_2",     "L3",                1000000,                           "USD", "test_company_3", "power",  "No", "Yes",
+  "test_lbk_3",     "L3",                1000000,                           "USD", "test_company_3", "power",  "No", "Yes",
+  "test_lbk_3",     "L4",                 500000,                           "USD", "test_company_4", "power",  "No", "Yes",
+  "test_lbk_4",     "L1",                 300000,                           "USD", "test_company_1", "power", "Yes",  "No",
+  "test_lbk_4",     "L4",                 500000,                           "USD", "test_company_4", "power", "Yes",  "No"
+)
+# styler: on
+
+test_that("net aggregate results with a group_var returns results for each group", {
+  n_groups <- length(unique(test_matched_group_var$foo))
+
+  test_output_with_group_var <- test_data_company_net %>%
+    aggregate_alignment_loanbook_exposure(
+      matched = test_matched_group_var,
+      level = test_level_net,
+      group_var = "foo"
+    )
+
+  expect_equal(
+    nrow(test_output_with_group_var),
+    n_groups
+  )
+})
+
+test_that("net aggregate results with a group_var returns results for each group for multiple variables", {
+  n_groups_2 <- nrow(dplyr::distinct(test_matched_group_var, .data$foo, .data$bar))
+
+  test_output_with_group_var_2 <- test_data_company_net %>%
+    aggregate_alignment_loanbook_exposure(
+      matched = test_matched_group_var,
+      level = test_level_net,
+      group_var = c("foo", "bar")
+    )
+
+  expect_equal(
+    nrow(test_output_with_group_var_2),
+    n_groups_2
+  )
+})
+
+# styler: off
+test_data_company_bopo <- tibble::tribble(
+     ~group_id, ~name_abcd,       ~sector, ~activity_unit,  ~region, ~scenario_source,       ~scenario, ~year, ~direction, ~total_deviation, ~alignment_metric,
+  "test_lbk_1", "test_company_1", "power",           "MW", "global",    "test_source", "test_scenario",  2027, "buildout",              -10,             -0.05,
+  "test_lbk_1", "test_company_1", "power",           "MW", "global",    "test_source", "test_scenario",  2027, "phaseout",             -100,             -0.25,
+  "test_lbk_1", "test_company_2", "power",           "MW", "global",    "test_source", "test_scenario",  2027, "buildout",              -50,             -0.35,
+  "test_lbk_1", "test_company_2", "power",           "MW", "global",    "test_source", "test_scenario",  2027, "phaseout",              -20,             -0.05,
+  "test_lbk_2", "test_company_2", "power",           "MW", "global",    "test_source", "test_scenario",  2027, "buildout",              -50,             -0.35,
+  "test_lbk_2", "test_company_2", "power",           "MW", "global",    "test_source", "test_scenario",  2027, "phaseout",              -20,             -0.05,
+  "test_lbk_2", "test_company_3", "power",           "MW", "global",    "test_source", "test_scenario",  2027, "phaseout",              -40,              -0.2,
+  "test_lbk_3", "test_company_3", "power",           "MW", "global",    "test_source", "test_scenario",  2027, "phaseout",              -40,              -0.2,
+  "test_lbk_3", "test_company_4", "power",           "MW", "global",    "test_source", "test_scenario",  2027, "buildout",               60,              0.15,
+  "test_lbk_3", "test_company_4", "power",           "MW", "global",    "test_source", "test_scenario",  2027, "phaseout",              -10,             -0.05,
+  "test_lbk_4", "test_company_4", "power",           "MW", "global",    "test_source", "test_scenario",  2027, "buildout",               60,              0.15,
+  "test_lbk_4", "test_company_4", "power",           "MW", "global",    "test_source", "test_scenario",  2027, "phaseout",              -10,             -0.05,
+  "test_lbk_4", "test_company_1", "power",           "MW", "global",    "test_source", "test_scenario",  2027, "buildout",              -10,             -0.05,
+  "test_lbk_4", "test_company_1", "power",           "MW", "global",    "test_source", "test_scenario",  2027, "phaseout",             -100,             -0.25
+)
+# styler: on
+
+test_that("bopo aggregate results with a group_var returns results for each available combination of buildout/phaseout and group", {
+  group_var_by_group_id <- dplyr::distinct(test_matched_group_var, .data$group_id, .data$foo)
+  direction_by_group_id <- dplyr::distinct(test_data_company_bopo, .data$group_id, .data$direction)
+
+  n_groups <- group_var_by_group_id %>%
+    dplyr::inner_join(
+      direction_by_group_id,
+      by = "group_id"
+    ) %>%
+    dplyr::distinct(.data$direction, .data$foo) %>%
+    nrow()
+
+  test_output_with_group_var <- test_data_company_bopo %>%
+    aggregate_alignment_loanbook_exposure(
+      matched = test_matched_group_var,
+      level = test_level_bopo,
+      group_var = "foo"
+    )
+
+  expect_equal(
+    nrow(test_output_with_group_var),
+    n_groups
+  )
+})
+
 # nolint end
