@@ -70,7 +70,6 @@ aggregate_alignment_loanbook_exposure <- function(data,
 
   sector_aggregate_exposure_loanbook_summary <- aggregate_exposure_company %>%
     dplyr::mutate(
-      # TODO: must be n_distinct
       n_companies = dplyr::n_distinct(.data$name_abcd),
       .by = dplyr::all_of(group_vars)
     ) %>%
@@ -146,13 +145,17 @@ aggregate_alignment_loanbook_exposure <- function(data,
       )
 
     aggregate_exposure_company <- aggregate_exposure_company %>%
-      bind_rows(opposite_direction) %>%
+      dplyr::bind_rows(opposite_direction) %>%
       dplyr::select(-"n_directions")
   }
 
   sector_aggregate_exposure_loanbook_alignment <- aggregate_exposure_company %>%
     dplyr::summarise(
-      exposure_weighted_net_alignment = stats::weighted.mean(.data$alignment_metric, w = .data$exposure_weight, na.rm = TRUE),
+      exposure_weighted_net_alignment = stats::weighted.mean(
+        x = .data$alignment_metric,
+        w = .data$exposure_weight,
+        na.rm = TRUE
+      ),
       .by = dplyr::all_of(group_vars)
     )
 
@@ -162,12 +165,20 @@ aggregate_alignment_loanbook_exposure <- function(data,
       by = group_vars
     ) %>%
     dplyr::relocate(
-      c(
-        dplyr::all_of(group_vars), "n_companies", "n_companies_aligned",
-        "share_companies_aligned", "exposure_weighted_net_alignment"
+      dplyr::all_of(
+        c(
+          group_vars, "n_companies", "n_companies_aligned",
+          "share_companies_aligned", "exposure_weighted_net_alignment"
+        )
       )
     ) %>%
-    dplyr::arrange(!!!rlang::syms(group_matched), .data$scenario, .data$region, .data$sector, .data$year)
+    dplyr::arrange(
+      !!!rlang::syms(group_matched),
+      .data$scenario,
+      .data$region,
+      .data$sector,
+      .data$year
+    )
 
   return(out)
 }
