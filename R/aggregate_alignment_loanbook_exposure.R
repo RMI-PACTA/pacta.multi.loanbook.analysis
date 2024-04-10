@@ -44,6 +44,9 @@ aggregate_alignment_loanbook_exposure <- function(data,
       dplyr::inner_join(
         group_id_by_group_var,
         by = c("group_id")
+      ) %>%
+      dplyr::distinct(
+        dplyr::across(-"group_id")
       )
   }
 
@@ -117,7 +120,7 @@ aggregate_alignment_loanbook_exposure <- function(data,
   if (level == "bo_po") {
     aggregate_exposure_company <- aggregate_exposure_company %>%
       dplyr::mutate(
-        n_directions = dplyr::n(),
+        n_directions = dplyr::n_distinct(.data$direction, na.rm = TRUE),
         .by = dplyr::all_of(
           c(
             group_vars[!group_vars == "direction"], "name_abcd", "sector",

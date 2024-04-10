@@ -218,4 +218,89 @@ test_that("bopo aggregate results with a group_var returns results for each avai
   )
 })
 
+test_that("aggregated net alignment by group_var foo equals sum of aggregated buildout and phaseout alignments by group_var foo", {
+  test_output_with_group_var_bopo <- test_data_company_bopo %>%
+    aggregate_alignment_loanbook_exposure(
+      matched = test_matched_group_var,
+      level = test_level_bopo,
+      group_var = "foo"
+    )
+
+  test_output_with_group_var_net <- test_data_company_net %>%
+    aggregate_alignment_loanbook_exposure(
+      matched = test_matched_group_var,
+      level = test_level_net,
+      group_var = "foo"
+    )
+
+  expect_equal(
+    sum(test_output_with_group_var_bopo$exposure_weighted_net_alignment, na.rm = TRUE),
+    sum(test_output_with_group_var_net$exposure_weighted_net_alignment, na.rm = TRUE)
+  )
+})
+
+test_that("net aggregated loan size by group_var foo equals sum of matched loan size by group_var foo", {
+  test_output_with_group_var_net <- test_data_company_net %>%
+    aggregate_alignment_loanbook_exposure(
+      matched = test_matched_group_var,
+      level = test_level_net,
+      group_var = "foo"
+    )
+
+  expect_equal(
+    sum(test_output_with_group_var_net$sum_loan_size_outstanding, na.rm = TRUE),
+    sum(test_matched_group_var$loan_size_outstanding, na.rm = TRUE)
+  )
+})
+
+test_that("aggregated net alignment by group_var that mirrors group_id is equivalent to aggregated net alignment", {
+  test_output_net <- test_data_company_net %>%
+    aggregate_alignment_loanbook_exposure(
+      matched = test_matched_group_var,
+      level = test_level_net
+    )
+
+  test_matched_group_var_same_as_group_id <- test_matched_group_var %>%
+    dplyr::mutate(baz = .data$group_id)
+
+  test_output_with_group_var_net <- test_data_company_net %>%
+    aggregate_alignment_loanbook_exposure(
+      matched = test_matched_group_var_same_as_group_id,
+      level = test_level_net,
+      group_var = "baz"
+    ) %>%
+    dplyr::rename(group_id = "baz") %>%
+    dplyr::select(names(test_output_net))
+
+  expect_equal(
+    test_output_with_group_var_net,
+    test_output_net
+  )
+})
+
+test_that("aggregated bopo alignment by group_var that mirrors group_id is equivalent to aggregated bopo alignment", {
+  test_output_bopo <- test_data_company_bopo %>%
+    aggregate_alignment_loanbook_exposure(
+      matched = test_matched_group_var,
+      level = test_level_bopo
+    )
+
+  test_matched_group_var_same_as_group_id <- test_matched_group_var %>%
+    dplyr::mutate(baz = .data$group_id)
+
+  test_output_with_group_var_bopo <- test_data_company_bopo %>%
+    aggregate_alignment_loanbook_exposure(
+      matched = test_matched_group_var_same_as_group_id,
+      level = test_level_bopo,
+      group_var = "baz"
+    ) %>%
+    dplyr::rename(group_id = "baz") %>%
+    dplyr::select(names(test_output_bopo))
+
+  expect_equal(
+    test_output_with_group_var_bopo,
+    test_output_bopo
+  )
+})
+
 # nolint end
