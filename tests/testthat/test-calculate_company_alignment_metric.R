@@ -2,19 +2,12 @@
 
 # nolint start: indentation_linter.
 # styler: off
-# test_data_calculate_company_tech_deviation <- tibble::tribble(
-#        ~sector, ~technology, ~year,  ~region,  ~scenario_source,     ~name_abcd,           ~metric, ~production, ~technology_share,       ~scope, ~percentage_of_initial_production_by_scope,    ~group_id,
-#   "automotive",  "electric",  2027, "global", "scenario_source", "test_company",       "projected",          25,              0.25,     "sector",                                      0.005, "test_group",
-#   "automotive",  "electric",  2027, "global", "scenario_source", "test_company", "target_scenario",          20,              0.25,     "sector",                                       0.01, "test_group",
-#   "automotive",       "ice",  2027, "global", "scenario_source", "test_company",       "projected",          75,              0.75, "technology",                                      0.005, "test_group",
-#   "automotive",       "ice",  2027, "global", "scenario_source", "test_company", "target_scenario",          60,              0.75, "technology",                                       0.01, "test_group"
-# )
 test_data_calculate_company_tech_deviation <- tibble::tribble(
-  ~sector, ~technology, ~year,  ~region,  ~scenario_source,     ~name_abcd,           ~metric, ~production, ~technology_share,       ~scope, ~percentage_of_initial_production_by_scope,    ~group_id, ~foo,
-  "automotive",  "electric",  2027, "global", "scenario_source", "test_company",       "projected",          25,              0.25,     "sector",                                      0.005, "test_group", "Yes",
-  "automotive",  "electric",  2027, "global", "scenario_source", "test_company", "target_scenario",          20,              0.25,     "sector",                                       0.01, "test_group", "Yes",
-  "automotive",       "ice",  2027, "global", "scenario_source", "test_company",       "projected",          75,              0.75, "technology",                                      0.005, "test_group", "No",
-  "automotive",       "ice",  2027, "global", "scenario_source", "test_company", "target_scenario",          60,              0.75, "technology",                                       0.01, "test_group", "No"
+       ~sector, ~technology, ~year,  ~region,  ~scenario_source,     ~name_abcd,           ~metric, ~production, ~technology_share,       ~scope, ~percentage_of_initial_production_by_scope,
+  "automotive",  "electric",  2027, "global", "scenario_source", "test_company",       "projected",          25,              0.25,     "sector",                                      0.005,
+  "automotive",  "electric",  2027, "global", "scenario_source", "test_company", "target_scenario",          20,              0.25,     "sector",                                       0.01,
+  "automotive",       "ice",  2027, "global", "scenario_source", "test_company",       "projected",          75,              0.75, "technology",                                      0.005,
+  "automotive",       "ice",  2027, "global", "scenario_source", "test_company", "target_scenario",          60,              0.75, "technology",                                       0.01
 )
 
 test_technology_direction <- tibble::tribble(
@@ -49,41 +42,41 @@ test_target_scenario <- paste0("target_", test_scenario)
 # 1) zero projected and target values
 # styler: off
 test_data_remove_tech_no_plans_no_target_1 <- tibble::tribble(
-       ~sector, ~technology, ~year,  ~region,  ~scenario_source,     ~name_abcd, ~projected, ~target_scenario,    ~group_id,
-  "automotive",  "electric",  2027, "global", "scenario_source", "test_company",         25,               20, "test_group",
-  "automotive",       "ice",  2027, "global", "scenario_source", "test_company",          0,                0, "test_group"
+       ~sector, ~technology, ~year,  ~region,  ~scenario_source,     ~name_abcd, ~projected, ~target_scenario,
+  "automotive",  "electric",  2027, "global", "scenario_source", "test_company",         25,               20,
+  "automotive",       "ice",  2027, "global", "scenario_source", "test_company",          0,                0
 )
 # 2) zero projected value, positive target
 test_data_remove_tech_no_plans_no_target_2 <- tibble::tribble(
-       ~sector, ~technology, ~year,  ~region,  ~scenario_source,     ~name_abcd, ~projected, ~target_scenario,    ~group_id,
-  "automotive",  "electric",  2027, "global", "scenario_source", "test_company",         25,               20, "test_group",
-  "automotive",       "ice",  2027, "global", "scenario_source", "test_company",          0,               10, "test_group"
+       ~sector, ~technology, ~year,  ~region,  ~scenario_source,     ~name_abcd, ~projected, ~target_scenario,
+  "automotive",  "electric",  2027, "global", "scenario_source", "test_company",         25,               20,
+  "automotive",       "ice",  2027, "global", "scenario_source", "test_company",          0,               10
 )
 # 3) positive projected value, zero target
 test_data_remove_tech_no_plans_no_target_3 <- tibble::tribble(
-       ~sector, ~technology, ~year,  ~region,  ~scenario_source,     ~name_abcd, ~projected, ~target_scenario,    ~group_id,
-  "automotive",  "electric",  2027, "global", "scenario_source", "test_company",         25,               20, "test_group",
-  "automotive",       "ice",  2027, "global", "scenario_source", "test_company",         10,                0, "test_group"
+       ~sector, ~technology, ~year,  ~region,  ~scenario_source,     ~name_abcd, ~projected, ~target_scenario,
+  "automotive",  "electric",  2027, "global", "scenario_source", "test_company",         25,               20,
+  "automotive",       "ice",  2027, "global", "scenario_source", "test_company",         10,                0
 )
 # 4) positive projected and target values
 test_data_remove_tech_no_plans_no_target_4 <- tibble::tribble(
-       ~sector, ~technology, ~year,  ~region,  ~scenario_source,     ~name_abcd, ~projected, ~target_scenario,    ~group_id,
-  "automotive",  "electric",  2027, "global", "scenario_source", "test_company",         25,               20, "test_group",
-  "automotive",       "ice",  2027, "global", "scenario_source", "test_company",         75,               60, "test_group"
+       ~sector, ~technology, ~year,  ~region,  ~scenario_source,     ~name_abcd, ~projected, ~target_scenario,
+  "automotive",  "electric",  2027, "global", "scenario_source", "test_company",         25,               20,
+  "automotive",       "ice",  2027, "global", "scenario_source", "test_company",         75,               60
 )
 # 5) NAs in projected and target values
 # TODO: reconsider if this needs to be handled somewhere else, effectively NAs are treated like zero
 test_data_remove_tech_no_plans_no_target_5 <- tibble::tribble(
-       ~sector, ~technology, ~year,  ~region,  ~scenario_source,     ~name_abcd, ~projected, ~target_scenario,    ~group_id,
-  "automotive",  "electric",  2027, "global", "scenario_source", "test_company",   NA_real_,         NA_real_, "test_group",
-  "automotive",       "ice",  2027, "global", "scenario_source", "test_company",   NA_real_,         NA_real_, "test_group"
+       ~sector, ~technology, ~year,  ~region,  ~scenario_source,     ~name_abcd, ~projected, ~target_scenario,
+  "automotive",  "electric",  2027, "global", "scenario_source", "test_company",   NA_real_,         NA_real_,
+  "automotive",       "ice",  2027, "global", "scenario_source", "test_company",   NA_real_,         NA_real_
 )
 # 6) NA in one of projected and target values
 # TODO: reconsider if this needs to be handled somewhere else, effectively NAs are treated like zero
 test_data_remove_tech_no_plans_no_target_6 <- tibble::tribble(
-       ~sector, ~technology, ~year,  ~region,  ~scenario_source,     ~name_abcd, ~projected, ~target_scenario,    ~group_id,
-  "automotive",  "electric",  2027, "global", "scenario_source", "test_company",   NA_real_,         NA_real_, "test_group",
-  "automotive",       "ice",  2027, "global", "scenario_source", "test_company",         40,               20, "test_group"
+       ~sector, ~technology, ~year,  ~region,  ~scenario_source,     ~name_abcd, ~projected, ~target_scenario,
+  "automotive",  "electric",  2027, "global", "scenario_source", "test_company",   NA_real_,         NA_real_,
+  "automotive",       "ice",  2027, "global", "scenario_source", "test_company",         40,               20
 )
 # styler: on
 
@@ -125,28 +118,28 @@ test_that("only rows with zero values in both projected and target values are re
 # styler: off
 # 1) zero values in all target values of sector
 test_data_remove_sector_no_target_1 <- tibble::tribble(
-       ~sector, ~technology, ~year,  ~region,  ~scenario_source,     ~name_abcd, ~projected, ~target_scenario,    ~group_id,
-  "automotive",  "electric",  2027, "global", "scenario_source", "test_company",         25,                0, "test_group",
-  "automotive",       "ice",  2027, "global", "scenario_source", "test_company",         10,                0, "test_group"
+       ~sector, ~technology, ~year,  ~region,  ~scenario_source,     ~name_abcd, ~projected, ~target_scenario,
+  "automotive",  "electric",  2027, "global", "scenario_source", "test_company",         25,                0,
+  "automotive",       "ice",  2027, "global", "scenario_source", "test_company",         10,                0
 )
 # 2) zero values in some target values of sector
 test_data_remove_sector_no_target_2 <- tibble::tribble(
-       ~sector, ~technology, ~year,  ~region,  ~scenario_source,     ~name_abcd, ~projected, ~target_scenario,    ~group_id,
-  "automotive",  "electric",  2027, "global", "scenario_source", "test_company",         25,                0, "test_group",
-  "automotive",       "ice",  2027, "global", "scenario_source", "test_company",         10,                5, "test_group"
+       ~sector, ~technology, ~year,  ~region,  ~scenario_source,     ~name_abcd, ~projected, ~target_scenario,
+  "automotive",  "electric",  2027, "global", "scenario_source", "test_company",         25,                0,
+  "automotive",       "ice",  2027, "global", "scenario_source", "test_company",         10,                5
 )
 # 3) zero values in all projected values of sector, but not target
 test_data_remove_sector_no_target_3 <- tibble::tribble(
-       ~sector, ~technology, ~year,  ~region,  ~scenario_source,     ~name_abcd, ~projected, ~target_scenario,    ~group_id,
-  "automotive",  "electric",  2027, "global", "scenario_source", "test_company",          0,                0, "test_group",
-  "automotive",       "ice",  2027, "global", "scenario_source", "test_company",          0,                5, "test_group"
+       ~sector, ~technology, ~year,  ~region,  ~scenario_source,     ~name_abcd, ~projected, ~target_scenario,
+  "automotive",  "electric",  2027, "global", "scenario_source", "test_company",          0,                0,
+  "automotive",       "ice",  2027, "global", "scenario_source", "test_company",          0,                5
 )
 # 4) NA values in all target values of sector
 # TODO: reconsider if this needs to be handled somewhere else, effectively NAs are treated like zero
 test_data_remove_sector_no_target_4 <- tibble::tribble(
-       ~sector, ~technology, ~year,  ~region,  ~scenario_source,     ~name_abcd, ~projected, ~target_scenario,    ~group_id,
-  "automotive",  "electric",  2027, "global", "scenario_source", "test_company",         25,         NA_real_, "test_group",
-  "automotive",       "ice",  2027, "global", "scenario_source", "test_company",         10,         NA_real_, "test_group"
+       ~sector, ~technology, ~year,  ~region,  ~scenario_source,     ~name_abcd, ~projected, ~target_scenario,
+  "automotive",  "electric",  2027, "global", "scenario_source", "test_company",         25,         NA_real_,
+  "automotive",       "ice",  2027, "global", "scenario_source", "test_company",         10,         NA_real_
 )
 # styler: on
 
@@ -267,11 +260,11 @@ test_that("total_tech_deviation is less or equal 0 for all technologies in bridg
 # styler: off
 # TODO: add a case of a pure phaseout sector
 test_data_calculate_company_aggregate_alignment_tms <- tibble::tribble(
-  ~sector,     ~technology, ~year,  ~region, ~scenario_source,       ~name_abcd,    ~group_id, ~projected, ~target_scenario, ~direction, ~total_tech_deviation, ~activity_unit,
-  "power",        "gascap",  2027, "global",    "test_source",   "test_company", "test_group",        100,               80, "phaseout",                   -20,           "MW",
-  "power", "renewablescap",  2027, "global",    "test_source",   "test_company", "test_group",         32,               40, "buildout",                    -8,           "MW",
+  ~sector,     ~technology, ~year,  ~region, ~scenario_source,       ~name_abcd, ~projected, ~target_scenario, ~direction, ~total_tech_deviation, ~activity_unit,
+  "power",        "gascap",  2027, "global",    "test_source",   "test_company",        100,               80, "phaseout",                   -20,           "MW",
+  "power", "renewablescap",  2027, "global",    "test_source",   "test_company",         32,               40, "buildout",                    -8,           "MW",
   # additional case where a company is only active in one of the two directions (# 89)
-  "power", "renewablescap",  2027, "global",    "test_source", "test_company_2", "test_group",         50,               75, "buildout",                   -25,           "MW"
+  "power", "renewablescap",  2027, "global",    "test_source", "test_company_2",         50,               75, "buildout",                   -25,           "MW"
 )
 # styler: on
 
@@ -302,10 +295,15 @@ test_that("calculate_company_aggregate_alignment_tms returns expected directions
 # number of units analysed
 n_groups_net <- test_data_calculate_company_aggregate_alignment_tms %>%
   dplyr::distinct(
-    .data$group_id, .data$name_abcd, .data$scenario_source, .data$region,
-    .data$year, .data$sector, .data$activity_unit
+    .data$name_abcd,
+    .data$scenario_source,
+    .data$region,
+    .data$year,
+    .data$sector,
+    .data$activity_unit
   ) %>%
   nrow()
+
 n_groups_bopo <- n_groups_net * 2
 
 test_that("calculate_company_aggregate_alignment_tms returns expected number of rows", {
@@ -355,12 +353,12 @@ test_that("consistency checks of calculate_company_aggregate_alignment_tms() pas
 ## add_net_absolute_scenario_value----
 # styler: off
 test_data_add_net_absolute_scenario_value <- tibble::tribble(
-     ~group_id,     ~name_abcd, ~scenario_source,     ~region,        ~sector, ~technology, ~activity_unit, ~year, ~target_scenario, ~direction, ~total_tech_deviation,
-  "test_group", "test_company",    "test_source", "somewhere",  "test_sector",    "tech_A",  "output unit",  2027,               20, "buildout",                    -5,
-  "test_group", "test_company",    "test_source", "somewhere",  "test_sector",    "tech_B",  "output unit",  2027,               50, "phaseout",                    10,
-  "test_group", "test_company",    "test_source", "somewhere",  "test_sector",    "tech_C",  "output unit",  2027,               30, "phaseout",                   -10,
-  "test_group", "test_company",    "test_source", "somewhere", "other_sector",    "tech_X",  "output unit",  2027,               30, "buildout",                   -20,
-  "test_group", "test_company",    "test_source", "somewhere", "other_sector",    "tech_Y",  "output unit",  2027,         NA_real_, "phaseout",              NA_real_
+      ~name_abcd, ~scenario_source,     ~region,        ~sector, ~technology, ~activity_unit, ~year, ~target_scenario, ~direction, ~total_tech_deviation,
+  "test_company",    "test_source", "somewhere",  "test_sector",    "tech_A",  "output unit",  2027,               20, "buildout",                    -5,
+  "test_company",    "test_source", "somewhere",  "test_sector",    "tech_B",  "output unit",  2027,               50, "phaseout",                    10,
+  "test_company",    "test_source", "somewhere",  "test_sector",    "tech_C",  "output unit",  2027,               30, "phaseout",                   -10,
+  "test_company",    "test_source", "somewhere", "other_sector",    "tech_X",  "output unit",  2027,               30, "buildout",                   -20,
+  "test_company",    "test_source", "somewhere", "other_sector",    "tech_Y",  "output unit",  2027,         NA_real_, "phaseout",              NA_real_
 )
 # styler: on
 
@@ -381,12 +379,12 @@ test_that("add_net_absolute_scenario_value adds sum of scenario values as expect
 ## add_total_deviation----
 # styler: off
 test_data_add_total_deviation_bo_po <- tibble::tribble(
-     ~group_id,     ~name_abcd, ~scenario_source,     ~region,        ~sector, ~technology, ~activity_unit, ~year, ~net_absolute_scenario_value, ~direction, ~total_tech_deviation,
-  "test_group", "test_company",    "test_source", "somewhere",  "test_sector",    "tech_A",  "output unit",  2027,                          100, "buildout",                    -5,
-  "test_group", "test_company",    "test_source", "somewhere",  "test_sector",    "tech_B",  "output unit",  2027,                          100, "phaseout",                    10,
-  "test_group", "test_company",    "test_source", "somewhere",  "test_sector",    "tech_C",  "output unit",  2027,                          100, "phaseout",                   -10,
-  "test_group", "test_company",    "test_source", "somewhere", "other_sector",    "tech_X",  "output unit",  2027,                           30, "buildout",                   -20,
-  "test_group", "test_company",    "test_source", "somewhere", "other_sector",    "tech_Y",  "output unit",  2027,                           30, "phaseout",                     5
+      ~name_abcd, ~scenario_source,     ~region,        ~sector, ~technology, ~activity_unit, ~year, ~net_absolute_scenario_value, ~direction, ~total_tech_deviation,
+  "test_company",    "test_source", "somewhere",  "test_sector",    "tech_A",  "output unit",  2027,                          100, "buildout",                    -5,
+  "test_company",    "test_source", "somewhere",  "test_sector",    "tech_B",  "output unit",  2027,                          100, "phaseout",                    10,
+  "test_company",    "test_source", "somewhere",  "test_sector",    "tech_C",  "output unit",  2027,                          100, "phaseout",                   -10,
+  "test_company",    "test_source", "somewhere", "other_sector",    "tech_X",  "output unit",  2027,                           30, "buildout",                   -20,
+  "test_company",    "test_source", "somewhere", "other_sector",    "tech_Y",  "output unit",  2027,                           30, "phaseout",                     5
 )
 # styler: on
 test_data_add_total_deviation_net <- test_data_add_total_deviation_bo_po %>%
@@ -413,10 +411,10 @@ test_that("add_total_deviation adds deviation by sector and direction as expecte
 ## calculate_company_alignment_metric----
 # styler: off
 test_data_calculate_company_alignment_metric <- tibble::tribble(
-     ~group_id,     ~name_abcd,    ~sector, ~activity_unit,     ~region, ~scenario_source, ~year, ~direction, ~total_deviation, ~net_absolute_scenario_value,
-  "test_group", "test_company", "sector_a",  "output_unit", "somewhere",    "that_source",  2027,      "net",               20,                           40,
-  "test_group", "test_company", "sector_b",  "output_unit", "somewhere",    "that_source",  2027,      "net",               50,                           40,
-  "test_group", "some_company", "sector_a",  "output_unit", "somewhere",    "that_source",  2027,      "net",               30,                           30
+      ~name_abcd,    ~sector, ~activity_unit,     ~region, ~scenario_source, ~year, ~direction, ~total_deviation, ~net_absolute_scenario_value,
+  "test_company", "sector_a",  "output_unit", "somewhere",    "that_source",  2027,      "net",               20,                           40,
+  "test_company", "sector_b",  "output_unit", "somewhere",    "that_source",  2027,      "net",               50,                           40,
+  "some_company", "sector_a",  "output_unit", "somewhere",    "that_source",  2027,      "net",               30,                           30
 )
 # styler: on
 test_scenario <- "some_scenario"
@@ -436,9 +434,9 @@ test_that("calculate_company_alignment_metric calculates company alignment metri
 ## fill_missing_direction (# 89)----
 # styler: off
 test_data_fill_missing_direction <- tibble::tribble(
-     ~group_id,       ~name_abcd, ~sector, ~activity_unit,  ~region, ~scenario_source,  ~scenario, ~year, ~direction, ~total_deviation, ~alignment_metric,
-  "test_group", "test_company_1", "power",           "MW", "global",    "test_source", "scenario",  2027, "buildout",               -1,              -0.5,
-  "test_group", "test_company_2", "power",           "MW", "global",    "test_source", "scenario",  2027, "phaseout",                1,               0.1
+        ~name_abcd, ~sector, ~activity_unit,  ~region, ~scenario_source,  ~scenario, ~year, ~direction, ~total_deviation, ~alignment_metric,
+  "test_company_1", "power",           "MW", "global",    "test_source", "scenario",  2027, "buildout",               -1,              -0.5,
+  "test_company_2", "power",           "MW", "global",    "test_source", "scenario",  2027, "phaseout",                1,               0.1
 )
 # styler: on
 
@@ -449,8 +447,12 @@ test_output_fill_missing_direction <- fill_missing_direction(
 # number of units of analysis
 n_units <- test_data_fill_missing_direction %>%
   dplyr::distinct(
-    .data$group_id, .data$name_abcd, .data$scenario_source, .data$region,
-    .data$year, .data$sector, .data$activity_unit
+    .data$name_abcd,
+    .data$scenario_source,
+    .data$region,
+    .data$year,
+    .data$sector,
+    .data$activity_unit
   ) %>%
   nrow()
 
@@ -464,11 +466,11 @@ test_that("fill_missing_direction returns both directions for all units of analy
 # calculate_company_aggregate_alignment_sda----
 # styler: off
 test_data_calculate_company_aggregate_alignment_sda <- tibble::tribble(
-  ~sector, ~year,  ~region, ~scenario_source,  ~name_abcd,    ~group_id, ~emission_factor_metric, ~emission_factor_value,
-  "steel",  2027, "global",    "test_source", "company_A", "test_group",             "projected",                    0.8,
-  "steel",  2027, "global",    "test_source", "company_A", "test_group",       "target_scenario",                    0.7,
-  "steel",  2027, "global",    "test_source", "company_B", "test_group",             "projected",                   0.55,
-  "steel",  2027, "global",    "test_source", "company_B", "test_group",       "target_scenario",                    0.6
+  ~sector, ~year,  ~region, ~scenario_source,  ~name_abcd, ~emission_factor_metric, ~emission_factor_value,
+  "steel",  2027, "global",    "test_source", "company_A",             "projected",                    0.8,
+  "steel",  2027, "global",    "test_source", "company_A",       "target_scenario",                    0.7,
+  "steel",  2027, "global",    "test_source", "company_B",             "projected",                   0.55,
+  "steel",  2027, "global",    "test_source", "company_B",       "target_scenario",                    0.6
 )
 # styler: on
 
@@ -484,14 +486,18 @@ test_output_calculate_company_aggregate_alignment_sda <- calculate_company_aggre
 )
 
 added_columns <- c("activity_unit", "scenario", "direction", "total_deviation", "alignment_metric")
-dropped_columns <- c("emission_factor_metric", "emission_factor_value", "group_id")
-# dropped_columns <- c("emission_factor_metric", "emission_factor_value")
+dropped_columns <- c("emission_factor_metric", "emission_factor_value")
 expected_output_columns <- c(names(test_data_calculate_company_aggregate_alignment_sda), added_columns)
 expected_output_columns <- expected_output_columns[!expected_output_columns %in% dropped_columns]
 
 expected_output_rows <- test_data_calculate_company_aggregate_alignment_sda %>%
-  dplyr::distinct(.data$sector, .data$year, .data$region, .data$scenario_source, .data$name_abcd) %>%
-  # dplyr::distinct(.data$sector, .data$year, .data$region, .data$scenario_source, .data$name_abcd, .data$group_id) %>%
+  dplyr::distinct(
+    .data$sector,
+    .data$year,
+    .data$region,
+    .data$scenario_source,
+    .data$name_abcd
+  ) %>%
   nrow()
 
 test_that("calculate_company_aggregate_alignment_sda returns expected structure of outputs", {
@@ -586,7 +592,11 @@ test_that("output columns replace emission_factor_* cols with projected and targ
 
 test_nrows <- nrow(test_output_prep_and_wrangle_aggregate_alignment_sda_1)
 expected_nrows <- test_data_prep_and_wrangle_aggregate_alignment_sda_1 %>%
-  dplyr::distinct(.data$scenario_source, .data$name_abcd, .data$year) %>%
+  dplyr::distinct(
+    .data$scenario_source,
+    .data$name_abcd,
+    .data$year
+  ) %>%
   nrow()
 
 test_that("number of output rows are distinct number of input rows that do not contain emission_factor_* data", {
@@ -634,10 +644,10 @@ test_that("years outside of start_year and start_year + time_frame are dropped",
 # add_total_deviation_sda
 # styler: off
 test_data_add_total_deviation_sda <- tibble::tribble(
-     ~group_id,  ~name_abcd,  ~scenario_source,      ~region,    ~sector, ~activity_unit, ~year, ~projected, ~net_absolute_scenario_value,
-  "test_group", "company_A", "scenario_source", "some_place", "sector_1",  "output_unit",  2027,        0.8,                          0.7,
-  "test_group", "company_A", "scenario_source", "some_place", "sector_2",  "output_unit",  2027,        1.1,                          0.8,
-  "test_group", "company_B", "scenario_source", "some_place", "sector_1",  "output_unit",  2027,        0.6,                          0.7
+   ~name_abcd,  ~scenario_source,      ~region,    ~sector, ~activity_unit, ~year, ~projected, ~net_absolute_scenario_value,
+  "company_A", "scenario_source", "some_place", "sector_1",  "output_unit",  2027,        0.8,                          0.7,
+  "company_A", "scenario_source", "some_place", "sector_2",  "output_unit",  2027,        1.1,                          0.8,
+  "company_B", "scenario_source", "some_place", "sector_1",  "output_unit",  2027,        0.6,                          0.7
 )
 # styler: on
 

@@ -3,35 +3,35 @@
 # nolint start: indentation_linter.
 # styler: off
 test_data_aggregate_alignment_loanbook_exposure_net <- tibble::tribble(
-     ~group_id, ~name_abcd,       ~sector, ~activity_unit,  ~region, ~scenario_source,       ~scenario, ~year, ~direction, ~total_deviation, ~alignment_metric,
-  "test_group", "test_company_1", "power",           "MW", "global",    "test_source", "test_scenario",  2027,      "net",             -110,              -0.3,
-  "test_group", "test_company_2", "power",           "MW", "global",    "test_source", "test_scenario",  2027,      "net",              -70,              -0.4,
-  "test_group", "test_company_3", "power",           "MW", "global",    "test_source", "test_scenario",  2027,      "net",              -40,              -0.2,
-  "test_group", "test_company_4", "power",           "MW", "global",    "test_source", "test_scenario",  2027,      "net",               50,               0.1
+        ~name_abcd, ~sector, ~activity_unit,  ~region, ~scenario_source,       ~scenario, ~year, ~direction, ~total_deviation, ~alignment_metric,
+  "test_company_1", "power",           "MW", "global",    "test_source", "test_scenario",  2027,      "net",             -110,              -0.3,
+  "test_company_2", "power",           "MW", "global",    "test_source", "test_scenario",  2027,      "net",              -70,              -0.4,
+  "test_company_3", "power",           "MW", "global",    "test_source", "test_scenario",  2027,      "net",              -40,              -0.2,
+  "test_company_4", "power",           "MW", "global",    "test_source", "test_scenario",  2027,      "net",               50,               0.1
 )
 # styler: on
 
 # styler: off
 test_data_aggregate_alignment_loanbook_exposure_bopo <- tibble::tribble(
-     ~group_id, ~name_abcd,       ~sector, ~activity_unit,  ~region, ~scenario_source,       ~scenario, ~year, ~direction, ~total_deviation, ~alignment_metric,
-  "test_group", "test_company_1", "power",           "MW", "global",    "test_source", "test_scenario",  2027, "buildout",              -10,             -0.05,
-  "test_group", "test_company_1", "power",           "MW", "global",    "test_source", "test_scenario",  2027, "phaseout",             -100,             -0.25,
-  "test_group", "test_company_2", "power",           "MW", "global",    "test_source", "test_scenario",  2027, "buildout",              -50,             -0.35,
-  "test_group", "test_company_2", "power",           "MW", "global",    "test_source", "test_scenario",  2027, "phaseout",              -20,             -0.05,
-  "test_group", "test_company_3", "power",           "MW", "global",    "test_source", "test_scenario",  2027, "phaseout",              -40,              -0.2,
-  "test_group", "test_company_4", "power",           "MW", "global",    "test_source", "test_scenario",  2027, "buildout",               60,              0.15,
-  "test_group", "test_company_4", "power",           "MW", "global",    "test_source", "test_scenario",  2027, "phaseout",              -10,             -0.05
+        ~name_abcd, ~sector, ~activity_unit,  ~region, ~scenario_source,       ~scenario, ~year, ~direction, ~total_deviation, ~alignment_metric,
+  "test_company_1", "power",           "MW", "global",    "test_source", "test_scenario",  2027, "buildout",              -10,             -0.05,
+  "test_company_1", "power",           "MW", "global",    "test_source", "test_scenario",  2027, "phaseout",             -100,             -0.25,
+  "test_company_2", "power",           "MW", "global",    "test_source", "test_scenario",  2027, "buildout",              -50,             -0.35,
+  "test_company_2", "power",           "MW", "global",    "test_source", "test_scenario",  2027, "phaseout",              -20,             -0.05,
+  "test_company_3", "power",           "MW", "global",    "test_source", "test_scenario",  2027, "phaseout",              -40,              -0.2,
+  "test_company_4", "power",           "MW", "global",    "test_source", "test_scenario",  2027, "buildout",               60,              0.15,
+  "test_company_4", "power",           "MW", "global",    "test_source", "test_scenario",  2027, "phaseout",              -10,             -0.05
 
 )
 # styler: on
 
 # styler: off
 test_matched <- tibble::tribble(
-     ~group_id, ~id_loan, ~loan_size_outstanding, ~loan_size_outstanding_currency,       ~name_abcd, ~sector,
-  "test_group",     "L1",                 300000,                           "USD", "test_company_1", "power",
-  "test_group",     "L2",                 700000,                           "USD", "test_company_2", "power",
-  "test_group",     "L3",                1000000,                           "USD", "test_company_3", "power",
-  "test_group",     "L4",                 500000,                           "USD", "test_company_4", "power"
+  ~id_loan, ~loan_size_outstanding, ~loan_size_outstanding_currency,       ~name_abcd, ~sector,
+      "L1",                 300000,                           "USD", "test_company_1", "power",
+      "L2",                 700000,                           "USD", "test_company_2", "power",
+      "L3",                1000000,                           "USD", "test_company_3", "power",
+      "L4",                 500000,                           "USD", "test_company_4", "power"
 )
 # styler: on
 
