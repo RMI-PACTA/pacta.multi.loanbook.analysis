@@ -8,7 +8,7 @@ aggregate_alignment_loanbook_exposure(
   data,
   matched,
   level = c("net", "bo_po"),
-  group_var = NULL
+  .by = NULL
 )
 }
 \arguments{
@@ -20,12 +20,11 @@ aggregate_alignment_loanbook_exposure(
 metric should be returned based on the net technology deviations (\code{net}) or
 disaggregated into buildout and phaseout technologies (\code{bo_po}).}
 
-\item{group_var}{Character. Optional vector of length >= 1 that indicates the
-name of one or more variables the results should be aggregated by, instead
-of using group_id as the main dimension of aggregation. All names indicated
-must be available variables in the \code{matched} data set. The intended use
-case is to allow analyzing the loan books by additional traits of interest,
-such as types of financial institutions.}
+\item{.by}{\if{html}{\out{<tidy-select>}} Character. Optionally, a selection of columns to
+group by, instead. All columns indicated must be available variables in the
+\code{matched} data set. The intended use case is to allow analyzing the loan
+books by additional traits of interest, such as types of financial
+institutions.}
 }
 \description{
 Return loan book level aggregation of company alignment metrics by exposure

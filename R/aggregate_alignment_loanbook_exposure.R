@@ -5,70 +5,76 @@
 #' @param level Character. Vector that indicates if the aggregate alignment
 #'   metric should be returned based on the net technology deviations (`net`) or
 #'   disaggregated into buildout and phaseout technologies (`bo_po`).
-#' @param group_var Character. Optional vector of length >= 1 that indicates the
-#'   name of one or more variables the results should be aggregated by, instead
-#'   of using group_id as the main dimension of aggregation. All names indicated
-#'   must be available variables in the `matched` data set. The intended use
-#'   case is to allow analyzing the loan books by additional traits of interest,
-#'   such as types of financial institutions.
+#' @param .by <tidy-select> Character. Optionally, a selection of columns to
+#'   group by, instead. All columns indicated must be available variables in the
+#'   `matched` data set. The intended use case is to allow analyzing the loan
+#'   books by additional traits of interest, such as types of financial
+#'   institutions.
 #'
 #' @return NULL
 #' @export
 aggregate_alignment_loanbook_exposure <- function(data,
                                                   matched,
                                                   level = c("net", "bo_po"),
-                                                  group_var = NULL) {
-  group_vars <- c("group_id", "scenario", "region", "sector", "year", "direction")
-  group_matched <- "group_id"
+                                                  .by = NULL) {
+  group_vars <- c(
+    "scenario",
+    "region",
+    "sector",
+    "year",
+    "direction"
+  )
   level <- rlang::arg_match(level)
 
   # validate input data sets
   validate_input_data_aggregate_alignment_loanbook_exposure(
     data = data,
     matched = matched,
-    group_vars = group_vars
+    group_vars = group_vars,
+    .by = .by
   )
 
-  # optionally extend by `group_var`. this currently only allows aggregation of supersets for group_var
-  if (!is.null(group_var)) {
-    if (!inherits(group_var, "character")) {
-      stop(glue::glue("`group_var` must be a character vector. Your input is {class(group_var)}."))
+  if (!is.null(.by)) {
+    if (!inherits(.by, "character")) {
+      stop(glue::glue("`.by` must be a character vector. Your input is {class(.by)}."))
     }
-    group_vars <- c(group_vars[!group_vars == "group_id"], group_var)
-    group_matched <- group_var
-
-    group_id_by_group_var <- matched %>%
-      dplyr::distinct(.data$group_id, !!!rlang::syms(group_var))
-
-    data <- data %>%
-      dplyr::inner_join(
-        group_id_by_group_var,
-        by = c("group_id")
-      ) %>%
-      dplyr::distinct(
-        dplyr::across(-"group_id")
-      )
+    group_vars <- c(.by, group_vars)
   }
 
   matched <- matched %>%
     dplyr::select(
       dplyr::all_of(
-        c(group_matched, "id_loan", "loan_size_outstanding", "loan_size_outstanding_currency", "name_abcd", "sector")
+        c(
+          .by,
+          "id_loan",
+          "loan_size_outstanding",
+          "loan_size_outstanding_currency",
+          "name_abcd",
+          "sector"
+        )
       )
     ) %>%
     dplyr::summarise(
       loan_size_outstanding = sum(.data$loan_size_outstanding, na.rm = TRUE),
-      .by = dplyr::all_of(c(group_matched, "loan_size_outstanding_currency", "name_abcd", "sector"))
+      .by = dplyr::all_of(
+        c(
+          .env$.by,
+          "loan_size_outstanding_currency",
+          "name_abcd",
+          "sector"
+        )
+      )
     ) %>%
     dplyr::mutate(
       exposure_weight = .data$loan_size_outstanding / sum(.data$loan_size_outstanding, na.rm = TRUE),
-      .by = dplyr::all_of(c(group_matched, "loan_size_outstanding_currency"))
+      .by = dplyr::all_of(c(.env$.by, "loan_size_outstanding_currency"))
     )
 
   aggregate_exposure_company <- data %>%
     dplyr::inner_join(
       matched,
-      by = c(group_matched, "name_abcd", "sector")
+      by = c("name_abcd", "sector"),
+      relationship = "many-to-many"
     )
 
   sector_aggregate_exposure_loanbook_summary <- aggregate_exposure_company %>%
@@ -123,8 +129,11 @@ aggregate_alignment_loanbook_exposure <- function(data,
         n_directions = dplyr::n_distinct(.data$direction, na.rm = TRUE),
         .by = dplyr::all_of(
           c(
-            group_vars[!group_vars == "direction"], "name_abcd", "sector",
-            "activity_unit", "loan_size_outstanding_currency"
+            group_vars[!group_vars == "direction"],
+            "name_abcd",
+            "sector",
+            "activity_unit",
+            "loan_size_outstanding_currency"
           )
         )
       )
@@ -170,13 +179,16 @@ aggregate_alignment_loanbook_exposure <- function(data,
     dplyr::relocate(
       dplyr::all_of(
         c(
-          group_vars, "n_companies", "n_companies_aligned",
-          "share_companies_aligned", "exposure_weighted_net_alignment"
+          group_vars,
+          "n_companies",
+          "n_companies_aligned",
+          "share_companies_aligned",
+          "exposure_weighted_net_alignment"
         )
       )
     ) %>%
     dplyr::arrange(
-      !!!rlang::syms(group_matched),
+      !!!rlang::syms(.by),
       .data$scenario,
       .data$region,
       .data$sector,
@@ -188,19 +200,28 @@ aggregate_alignment_loanbook_exposure <- function(data,
 
 validate_input_data_aggregate_alignment_loanbook_exposure <- function(data,
                                                                       matched,
-                                                                      group_vars) {
+                                                                      group_vars,
+                                                                      .by = NULL) {
   validate_data_has_expected_cols(
     data = data,
     expected_columns = c(
-      group_vars, "name_abcd", "activity_unit", "scenario_source", "alignment_metric"
+      group_vars,
+      "name_abcd",
+      "activity_unit",
+      "scenario_source",
+      "alignment_metric"
     )
   )
 
   validate_data_has_expected_cols(
     data = matched,
     expected_columns = c(
-      "group_id", "id_loan", "loan_size_outstanding",
-      "loan_size_outstanding_currency", "name_abcd", "sector"
+      "id_loan",
+      "loan_size_outstanding",
+      "loan_size_outstanding_currency",
+      "name_abcd",
+      "sector",
+      .by
     )
   )
 

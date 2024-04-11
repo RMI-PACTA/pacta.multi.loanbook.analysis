@@ -2,12 +2,19 @@
 
 # nolint start: indentation_linter.
 # styler: off
+# test_data_calculate_company_tech_deviation <- tibble::tribble(
+#        ~sector, ~technology, ~year,  ~region,  ~scenario_source,     ~name_abcd,           ~metric, ~production, ~technology_share,       ~scope, ~percentage_of_initial_production_by_scope,    ~group_id,
+#   "automotive",  "electric",  2027, "global", "scenario_source", "test_company",       "projected",          25,              0.25,     "sector",                                      0.005, "test_group",
+#   "automotive",  "electric",  2027, "global", "scenario_source", "test_company", "target_scenario",          20,              0.25,     "sector",                                       0.01, "test_group",
+#   "automotive",       "ice",  2027, "global", "scenario_source", "test_company",       "projected",          75,              0.75, "technology",                                      0.005, "test_group",
+#   "automotive",       "ice",  2027, "global", "scenario_source", "test_company", "target_scenario",          60,              0.75, "technology",                                       0.01, "test_group"
+# )
 test_data_calculate_company_tech_deviation <- tibble::tribble(
-       ~sector, ~technology, ~year,  ~region,  ~scenario_source,     ~name_abcd,           ~metric, ~production, ~technology_share,       ~scope, ~percentage_of_initial_production_by_scope,    ~group_id,
-  "automotive",  "electric",  2027, "global", "scenario_source", "test_company",       "projected",          25,              0.25,     "sector",                                      0.005, "test_group",
-  "automotive",  "electric",  2027, "global", "scenario_source", "test_company", "target_scenario",          20,              0.25,     "sector",                                       0.01, "test_group",
-  "automotive",       "ice",  2027, "global", "scenario_source", "test_company",       "projected",          75,              0.75, "technology",                                      0.005, "test_group",
-  "automotive",       "ice",  2027, "global", "scenario_source", "test_company", "target_scenario",          60,              0.75, "technology",                                       0.01, "test_group"
+  ~sector, ~technology, ~year,  ~region,  ~scenario_source,     ~name_abcd,           ~metric, ~production, ~technology_share,       ~scope, ~percentage_of_initial_production_by_scope,    ~group_id, ~foo,
+  "automotive",  "electric",  2027, "global", "scenario_source", "test_company",       "projected",          25,              0.25,     "sector",                                      0.005, "test_group", "Yes",
+  "automotive",  "electric",  2027, "global", "scenario_source", "test_company", "target_scenario",          20,              0.25,     "sector",                                       0.01, "test_group", "Yes",
+  "automotive",       "ice",  2027, "global", "scenario_source", "test_company",       "projected",          75,              0.75, "technology",                                      0.005, "test_group", "No",
+  "automotive",       "ice",  2027, "global", "scenario_source", "test_company", "target_scenario",          60,              0.75, "technology",                                       0.01, "test_group", "No"
 )
 
 test_technology_direction <- tibble::tribble(
@@ -477,12 +484,14 @@ test_output_calculate_company_aggregate_alignment_sda <- calculate_company_aggre
 )
 
 added_columns <- c("activity_unit", "scenario", "direction", "total_deviation", "alignment_metric")
-dropped_columns <- c("emission_factor_metric", "emission_factor_value")
+dropped_columns <- c("emission_factor_metric", "emission_factor_value", "group_id")
+# dropped_columns <- c("emission_factor_metric", "emission_factor_value")
 expected_output_columns <- c(names(test_data_calculate_company_aggregate_alignment_sda), added_columns)
 expected_output_columns <- expected_output_columns[!expected_output_columns %in% dropped_columns]
 
 expected_output_rows <- test_data_calculate_company_aggregate_alignment_sda %>%
-  dplyr::distinct(.data$sector, .data$year, .data$region, .data$scenario_source, .data$name_abcd, .data$group_id) %>%
+  dplyr::distinct(.data$sector, .data$year, .data$region, .data$scenario_source, .data$name_abcd) %>%
+  # dplyr::distinct(.data$sector, .data$year, .data$region, .data$scenario_source, .data$name_abcd, .data$group_id) %>%
   nrow()
 
 test_that("calculate_company_aggregate_alignment_sda returns expected structure of outputs", {
