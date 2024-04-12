@@ -52,14 +52,14 @@ test_output_aggregate_alignment_loanbook_exposure_bopo <- test_data_aggregate_al
 
 test_that("aggregated net alignment equals sum of aggregated buildout and phaseout alignments", {
   expect_equal(
-    test_output_aggregate_alignment_loanbook_exposure_net$exposure_weighted_net_alignment,
-    sum(test_output_aggregate_alignment_loanbook_exposure_bopo$exposure_weighted_net_alignment, na.rm = TRUE)
+    test_output_aggregate_alignment_loanbook_exposure_net$aggregate$exposure_weighted_net_alignment,
+    sum(test_output_aggregate_alignment_loanbook_exposure_bopo$aggregate$exposure_weighted_net_alignment, na.rm = TRUE)
   )
 })
 
 test_that("net aggregated loan size equals sum of matched loan size", {
   expect_equal(
-    sum(test_output_aggregate_alignment_loanbook_exposure_net$sum_loan_size_outstanding, na.rm = TRUE),
+    sum(test_output_aggregate_alignment_loanbook_exposure_net$aggregate$sum_loan_size_outstanding, na.rm = TRUE),
     sum(test_matched$loan_size_outstanding, na.rm = TRUE)
   )
 })
@@ -68,38 +68,32 @@ test_that("number of identified companies equals unique list of companies in inp
   n_companies_input_net <- length(unique(test_data_aggregate_alignment_loanbook_exposure_net$name_abcd))
 
   expect_equal(
-    test_output_aggregate_alignment_loanbook_exposure_net$n_companies,
+    test_output_aggregate_alignment_loanbook_exposure_net$aggregate$n_companies,
     n_companies_input_net
   )
 })
 
-test_that("number of identified companies equals unique list of companies in input data", {
-  n_companies_input_buildout <- test_data_aggregate_alignment_loanbook_exposure_bopo %>%
-    dplyr::filter(.data$direction == "buildout") %>%
+test_that("number of identified companies per direction equals unique list of companies in input data", {
+  n_companies_input_bopo <- test_data_aggregate_alignment_loanbook_exposure_bopo %>%
     dplyr::distinct(.data$name_abcd) %>%
     nrow()
 
-  n_output_buildout <- test_output_aggregate_alignment_loanbook_exposure_bopo %>%
+  n_output_buildout <- test_output_aggregate_alignment_loanbook_exposure_bopo$aggregate %>%
     dplyr::filter(.data$direction == "buildout") %>%
     dplyr::pull(.data$n_companies)
 
   expect_equal(
     n_output_buildout,
-    n_companies_input_buildout
+    n_companies_input_bopo
   )
 
-  n_companies_input_phaseout <- test_data_aggregate_alignment_loanbook_exposure_bopo %>%
-    dplyr::filter(.data$direction == "phaseout") %>%
-    dplyr::distinct(.data$name_abcd) %>%
-    nrow()
-
-  n_output_phaseout <- test_output_aggregate_alignment_loanbook_exposure_bopo %>%
+  n_output_phaseout <- test_output_aggregate_alignment_loanbook_exposure_bopo$aggregate %>%
     dplyr::filter(.data$direction == "phaseout") %>%
     dplyr::pull(.data$n_companies)
 
   expect_equal(
     n_output_phaseout,
-    n_companies_input_phaseout
+    n_companies_input_bopo
   )
 })
 
@@ -107,8 +101,8 @@ test_that("net aggregate results have the same columns as buildout/phaseout aggr
   exposure_columns <- c("sum_loan_size_outstanding", "sum_exposure_companies_aligned", "share_exposure_aligned")
 
   expect_equal(
-    c(names(test_output_aggregate_alignment_loanbook_exposure_bopo), exposure_columns),
-    names(test_output_aggregate_alignment_loanbook_exposure_net)
+    c(names(test_output_aggregate_alignment_loanbook_exposure_bopo$aggregate), exposure_columns),
+    names(test_output_aggregate_alignment_loanbook_exposure_net$aggregate)
   )
 })
 
@@ -148,7 +142,7 @@ test_that("net aggregate results with a group_var returns results for each group
     )
 
   expect_equal(
-    nrow(test_output_with_group_var),
+    nrow(test_output_with_group_var$aggregate),
     n_groups
   )
 })
@@ -164,7 +158,7 @@ test_that("net aggregate results with a group_var returns results for each group
     )
 
   expect_equal(
-    nrow(test_output_with_group_var_2),
+    nrow(test_output_with_group_var_2$aggregate),
     n_groups_2
   )
 })
@@ -194,7 +188,7 @@ test_that("bopo aggregate results grouped by foo returns results for each availa
     )
 
   expect_equal(
-    nrow(test_output_with_group_var),
+    nrow(test_output_with_group_var$aggregate),
     nrow(n_groups) * nrow(n_directions)
   )
 })
@@ -215,8 +209,8 @@ test_that("aggregated net alignment by group_var foo equals sum of aggregated bu
     )
 
   expect_equal(
-    sum(test_output_with_group_var_bopo$exposure_weighted_net_alignment, na.rm = TRUE),
-    sum(test_output_with_group_var_net$exposure_weighted_net_alignment, na.rm = TRUE)
+    sum(test_output_with_group_var_bopo$aggregate$exposure_weighted_net_alignment, na.rm = TRUE),
+    sum(test_output_with_group_var_net$aggregate$exposure_weighted_net_alignment, na.rm = TRUE)
   )
 })
 
@@ -229,7 +223,7 @@ test_that("net aggregated loan size by foo equals sum of matched loan size by fo
     )
 
   expect_equal(
-    sum(test_output_with_group_var_net$sum_loan_size_outstanding, na.rm = TRUE),
+    sum(test_output_with_group_var_net$aggregate$sum_loan_size_outstanding, na.rm = TRUE),
     sum(test_matched_group_var$loan_size_outstanding, na.rm = TRUE)
   )
 })

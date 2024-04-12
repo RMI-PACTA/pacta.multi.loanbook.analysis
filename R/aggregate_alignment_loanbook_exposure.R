@@ -77,6 +77,52 @@ aggregate_alignment_loanbook_exposure <- function(data,
       relationship = "many-to-many"
     )
 
+  # if a company only has technologies going in one direction in a sector with
+  # high carbon and low carbon technologies, add an empty entry for the other
+  # direction to ensure the aggregation is correct
+  if (level == "bo_po") {
+    aggregate_exposure_company <- aggregate_exposure_company %>%
+      dplyr::mutate(
+        n_directions = dplyr::n_distinct(.data$direction, na.rm = TRUE),
+        .by = dplyr::all_of(
+          c(
+            group_vars[!group_vars == "direction"],
+            "name_abcd",
+            "sector",
+            "activity_unit",
+            "loan_size_outstanding_currency"
+          )
+        )
+      )
+
+    single_direction <- aggregate_exposure_company %>%
+      dplyr::filter(
+        .data$n_directions == 1,
+        .data$direction %in% c("buildout", "phaseout"),
+        .data$sector %in% c("automotive", "hdv", "power")
+      )
+
+    opposite_direction <- single_direction %>%
+      dplyr::mutate(
+        direction = dplyr::if_else(
+          .data$direction == "buildout",
+          "phaseout",
+          "buildout"
+        ),
+        total_deviation = 0,
+        alignment_metric = 0
+      )
+
+    aggregate_exposure_company <- aggregate_exposure_company %>%
+      dplyr::bind_rows(opposite_direction) %>%
+      dplyr::select(-"n_directions")
+  }
+
+  out_company <- aggregate_exposure_company %>%
+    dplyr::relocate(
+      dplyr::all_of(c(.by))
+    )
+
   sector_aggregate_exposure_loanbook_summary <- aggregate_exposure_company %>%
     dplyr::mutate(
       n_companies = dplyr::n_distinct(.data$name_abcd),
@@ -120,47 +166,6 @@ aggregate_alignment_loanbook_exposure <- function(data,
       )
   }
 
-  # if a company only has technologies going in one direction in a sector with
-  # high carbon and low carbon technologies, add an empty entry for the other
-  # direction to ensure the aggregation is correct
-  if (level == "bo_po") {
-    aggregate_exposure_company <- aggregate_exposure_company %>%
-      dplyr::mutate(
-        n_directions = dplyr::n_distinct(.data$direction, na.rm = TRUE),
-        .by = dplyr::all_of(
-          c(
-            group_vars[!group_vars == "direction"],
-            "name_abcd",
-            "sector",
-            "activity_unit",
-            "loan_size_outstanding_currency"
-          )
-        )
-      )
-
-    single_direction <- aggregate_exposure_company %>%
-      dplyr::filter(
-        .data$n_directions == 1,
-        .data$direction %in% c("buildout", "phaseout"),
-        .data$sector %in% c("automotive", "hdv", "power")
-      )
-
-    opposite_direction <- single_direction %>%
-      dplyr::mutate(
-        direction = dplyr::if_else(
-          .data$direction == "buildout",
-          "phaseout",
-          "buildout"
-        ),
-        total_deviation = 0,
-        alignment_metric = 0
-      )
-
-    aggregate_exposure_company <- aggregate_exposure_company %>%
-      dplyr::bind_rows(opposite_direction) %>%
-      dplyr::select(-"n_directions")
-  }
-
   sector_aggregate_exposure_loanbook_alignment <- aggregate_exposure_company %>%
     dplyr::summarise(
       exposure_weighted_net_alignment = stats::weighted.mean(
@@ -171,7 +176,7 @@ aggregate_alignment_loanbook_exposure <- function(data,
       .by = dplyr::all_of(group_vars)
     )
 
-  out <- sector_aggregate_exposure_loanbook_summary %>%
+  out_aggregate <- sector_aggregate_exposure_loanbook_summary %>%
     dplyr::inner_join(
       sector_aggregate_exposure_loanbook_alignment,
       by = group_vars
@@ -194,6 +199,11 @@ aggregate_alignment_loanbook_exposure <- function(data,
       .data$sector,
       .data$year
     )
+
+  out <- list(
+    company = out_company,
+    aggregate = out_aggregate
+  )
 
   return(out)
 }
