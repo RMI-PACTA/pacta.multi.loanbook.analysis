@@ -131,6 +131,20 @@ test_matched_group_var <- tibble::tribble(
 )
 # styler: on
 
+test_that("net aggregate results with grouped with bad .by returns ", {
+  expect_error(
+    {
+      test_data_company_net %>%
+        aggregate_alignment_loanbook_exposure(
+          matched = test_matched_group_var,
+          level = test_level_net,
+          .by = "bad"
+      )
+    },
+    regexp = "Must include expected columns in input data set."
+  )
+})
+
 test_that("net aggregate results with a group_var returns results for each group", {
   n_groups <- length(unique(test_matched_group_var$foo))
 
