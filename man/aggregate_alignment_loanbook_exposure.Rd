@@ -23,13 +23,13 @@ aggregate_alignment_loanbook_exposure(
 metric should be returned based on the net technology deviations (\code{net}) or
 disaggregated into buildout and phaseout technologies (\code{bo_po}).}
 
-\item{.by}{\if{html}{\out{<tidy-select>}} Character. Optionally, a selection of columns to
-group by. All columns indicated must be available variables in the
-\code{matched} data set. The intended use case is to allow analyzing the loan
-books by additional traits of interest, such as types of financial
-institutions. Default is \code{NULL}, which means the aggregation is done at the
-meta level. It is not possible to group by the critical columns of the
-\code{data} and \code{matched} inputs.}
+\item{.by}{Character. Optionally, a selection of columns to group by. All
+columns indicated must be available variables in the \code{matched} data set.
+The intended use case is to allow analyzing the loan books by additional
+traits of interest, such as types of financial institutions. Default is
+\code{NULL}, which means the aggregation is done at the meta level. It is not
+possible to group by the critical columns of the \code{data} and \code{matched}
+inputs.}
 }
 \description{
 Return loan book level aggregation of company alignment metrics by exposure

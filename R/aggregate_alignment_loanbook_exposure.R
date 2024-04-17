@@ -8,13 +8,13 @@
 #' @param level Character. Vector that indicates if the aggregate alignment
 #'   metric should be returned based on the net technology deviations (`net`) or
 #'   disaggregated into buildout and phaseout technologies (`bo_po`).
-#' @param .by <tidy-select> Character. Optionally, a selection of columns to
-#'   group by. All columns indicated must be available variables in the
-#'   `matched` data set. The intended use case is to allow analyzing the loan
-#'   books by additional traits of interest, such as types of financial
-#'   institutions. Default is `NULL`, which means the aggregation is done at the
-#'   meta level. It is not possible to group by the critical columns of the
-#'   `data` and `matched` inputs.
+#' @param .by Character. Optionally, a selection of columns to group by. All
+#'   columns indicated must be available variables in the `matched` data set.
+#'   The intended use case is to allow analyzing the loan books by additional
+#'   traits of interest, such as types of financial institutions. Default is
+#'   `NULL`, which means the aggregation is done at the meta level. It is not
+#'   possible to group by the critical columns of the `data` and `matched`
+#'   inputs.
 #'
 #' @return NULL
 #' @export
