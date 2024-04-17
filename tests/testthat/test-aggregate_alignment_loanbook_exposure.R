@@ -131,7 +131,7 @@ test_matched_dot_by <- tibble::tribble(
 )
 # styler: on
 
-test_that("net aggregate results with grouped with bad .by returns ", {
+test_that("net aggregate results with bad .by returns error", {
   expect_error(
     {
       test_data_company_net %>%
@@ -142,6 +142,21 @@ test_that("net aggregate results with grouped with bad .by returns ", {
       )
     },
     regexp = "Must include expected columns in input data set."
+  )
+})
+
+test_that("net aggregate results with .by arg as crucial variable returns error", {
+  expect_error(
+    {
+      test_data_company_net %>%
+        aggregate_alignment_loanbook_exposure(
+          matched = test_matched_dot_by,
+          level = test_level_net,
+          .by = "loan_size_outstanding"
+        )
+    },
+    regexp = "It is not possible to group by the critical columns of the `data` and
+        `matched` inputs."
   )
 })
 

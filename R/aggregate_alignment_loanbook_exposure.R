@@ -240,5 +240,29 @@ validate_input_data_aggregate_alignment_loanbook_exposure <- function(data,
     )
   )
 
+  if (!is.null(.by)) {
+    if (
+      any(
+        .by %in% c(
+          group_vars,
+          "name_abcd",
+          "activity_unit",
+          "scenario_source",
+          "alignment_metric",
+          "id_loan",
+          "loan_size_outstanding",
+          "loan_size_outstanding_currency",
+          "name_abcd",
+          "sector"
+        )
+      )
+    ) {
+      stop(
+        "It is not possible to group by the critical columns of the `data` and
+        `matched` inputs. Please check your .by argument!"
+      )
+    }
+  }
+
   invisible()
 }
