@@ -106,8 +106,8 @@ test_that("net aggregate results have the same columns as buildout/phaseout aggr
   )
 })
 
-# When an additional variable is passed via group_var, add group_var to
-# variables considered in aggregation (GH: 33)
+# When an additional variable is passed via .by, add .by to variables considered
+# in aggregation (GH: 33)
 
 # styler: off
 test_data_company_net <- tibble::tribble(
@@ -118,7 +118,7 @@ test_data_company_net <- tibble::tribble(
   "test_company_4", "power",           "MW", "global",    "test_source", "test_scenario",  2027,      "net",               50,               0.1
 )
 
-test_matched_group_var <- tibble::tribble(
+test_matched_dot_by <- tibble::tribble(
      ~group_id, ~id_loan, ~loan_size_outstanding, ~loan_size_outstanding_currency,       ~name_abcd, ~sector,  ~foo, ~bar,
   "test_lbk_1",     "L1",                 300000,                           "USD", "test_company_1", "power", "Yes", "Yes",
   "test_lbk_1",     "L2",                 700000,                           "USD", "test_company_2", "power", "Yes", "Yes",
@@ -136,7 +136,7 @@ test_that("net aggregate results with grouped with bad .by returns ", {
     {
       test_data_company_net %>%
         aggregate_alignment_loanbook_exposure(
-          matched = test_matched_group_var,
+          matched = test_matched_dot_by,
           level = test_level_net,
           .by = "bad"
       )
@@ -145,34 +145,34 @@ test_that("net aggregate results with grouped with bad .by returns ", {
   )
 })
 
-test_that("net aggregate results with a group_var returns results for each group", {
-  n_groups <- length(unique(test_matched_group_var$foo))
+test_that("net aggregate results with .by specified returns results for each group", {
+  n_groups <- length(unique(test_matched_dot_by$foo))
 
-  test_output_with_group_var <- test_data_company_net %>%
+  test_output_with_dot_by <- test_data_company_net %>%
     aggregate_alignment_loanbook_exposure(
-      matched = test_matched_group_var,
+      matched = test_matched_dot_by,
       level = test_level_net,
       .by = "foo"
     )
 
   expect_equal(
-    nrow(test_output_with_group_var$aggregate),
+    nrow(test_output_with_dot_by$aggregate),
     n_groups
   )
 })
 
-test_that("net aggregate results with a group_var returns results for each group for multiple variables", {
-  n_groups_2 <- nrow(dplyr::distinct(test_matched_group_var, .data$foo, .data$bar))
+test_that("net aggregate results with multiple variables specified in .by returns results for each combination of groups", {
+  n_groups_2 <- nrow(dplyr::distinct(test_matched_dot_by, .data$foo, .data$bar))
 
-  test_output_with_group_var_2 <- test_data_company_net %>%
+  test_output_with_dot_by_2 <- test_data_company_net %>%
     aggregate_alignment_loanbook_exposure(
-      matched = test_matched_group_var,
+      matched = test_matched_dot_by,
       level = test_level_net,
       .by = c("foo", "bar")
     )
 
   expect_equal(
-    nrow(test_output_with_group_var_2$aggregate),
+    nrow(test_output_with_dot_by_2$aggregate),
     n_groups_2
   )
 })
@@ -191,54 +191,54 @@ test_data_company_bopo <- tibble::tribble(
 # styler: on
 
 test_that("bopo aggregate results grouped by foo returns results for each available combination of buildout/phaseout and group foo", {
-  n_groups <- dplyr::distinct(test_matched_group_var, .data$foo)
+  n_groups <- dplyr::distinct(test_matched_dot_by, .data$foo)
   n_directions <- dplyr::distinct(test_data_company_bopo, .data$direction)
 
-  test_output_with_group_var <- test_data_company_bopo %>%
+  test_output_with_dot_by <- test_data_company_bopo %>%
     aggregate_alignment_loanbook_exposure(
-      matched = test_matched_group_var,
+      matched = test_matched_dot_by,
       level = test_level_bopo,
       .by = "foo"
     )
 
   expect_equal(
-    nrow(test_output_with_group_var$aggregate),
+    nrow(test_output_with_dot_by$aggregate),
     nrow(n_groups) * nrow(n_directions)
   )
 })
 
-test_that("aggregated net alignment by group_var foo equals sum of aggregated buildout and phaseout alignments by group_var foo", {
-  test_output_with_group_var_bopo <- test_data_company_bopo %>%
+test_that("aggregated net alignment grouped by foo equals sum of aggregated buildout and phaseout alignments grouped by foo", {
+  test_output_with_dot_by_bopo <- test_data_company_bopo %>%
     aggregate_alignment_loanbook_exposure(
-      matched = test_matched_group_var,
+      matched = test_matched_dot_by,
       level = test_level_bopo,
       .by = "foo"
     )
 
-  test_output_with_group_var_net <- test_data_company_net %>%
+  test_output_with_dot_by_net <- test_data_company_net %>%
     aggregate_alignment_loanbook_exposure(
-      matched = test_matched_group_var,
+      matched = test_matched_dot_by,
       level = test_level_net,
       .by = "foo"
     )
 
   expect_equal(
-    sum(test_output_with_group_var_bopo$aggregate$exposure_weighted_net_alignment, na.rm = TRUE),
-    sum(test_output_with_group_var_net$aggregate$exposure_weighted_net_alignment, na.rm = TRUE)
+    sum(test_output_with_dot_by_bopo$aggregate$exposure_weighted_net_alignment, na.rm = TRUE),
+    sum(test_output_with_dot_by_net$aggregate$exposure_weighted_net_alignment, na.rm = TRUE)
   )
 })
 
-test_that("net aggregated loan size by foo equals sum of matched loan size by foo", {
-  test_output_with_group_var_net <- test_data_company_net %>%
+test_that("net aggregated loan size grouped by foo equals sum of matched loan size grouped by foo", {
+  test_output_with_dot_by_net <- test_data_company_net %>%
     aggregate_alignment_loanbook_exposure(
-      matched = test_matched_group_var,
+      matched = test_matched_dot_by,
       level = test_level_net,
       .by = "foo"
     )
 
   expect_equal(
-    sum(test_output_with_group_var_net$aggregate$sum_loan_size_outstanding, na.rm = TRUE),
-    sum(test_matched_group_var$loan_size_outstanding, na.rm = TRUE)
+    sum(test_output_with_dot_by_net$aggregate$sum_loan_size_outstanding, na.rm = TRUE),
+    sum(test_matched_dot_by$loan_size_outstanding, na.rm = TRUE)
   )
 })
 

@@ -1,15 +1,20 @@
 #' Return loan book level aggregation of company alignment metrics by exposure
 #'
-#' @param data data.frame. Holds output pf company indicators
-#' @param matched data.frame. Holds matched and prioritised loan book
+#' @param data data.frame. Holds output of company indicators. Contains columns
+#'   `"name_abcd"`,	`"sector"`,	`"activity_unit"`,	`"region"`,
+#'   `"scenario_source"`,	`"scenario"`,	`"year"`,	`"direction"`,
+#'   `"total_deviation"` and	`"alignment_metric"`.
+#' @param matched data.frame. Holds matched and prioritized loan book data.
 #' @param level Character. Vector that indicates if the aggregate alignment
 #'   metric should be returned based on the net technology deviations (`net`) or
 #'   disaggregated into buildout and phaseout technologies (`bo_po`).
 #' @param .by <tidy-select> Character. Optionally, a selection of columns to
-#'   group by, instead. All columns indicated must be available variables in the
+#'   group by. All columns indicated must be available variables in the
 #'   `matched` data set. The intended use case is to allow analyzing the loan
 #'   books by additional traits of interest, such as types of financial
-#'   institutions.
+#'   institutions. Default is `NULL`, which means the aggregation is done at the
+#'   meta level. It is not possible to group by the critical columns of the
+#'   `data` and `matched` inputs.
 #'
 #' @return NULL
 #' @export
