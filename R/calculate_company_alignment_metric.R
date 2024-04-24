@@ -129,8 +129,12 @@ remove_tech_no_plans_no_target <- function(data,
                                            target_scenario) {
   data_to_remove <- data %>%
     dplyr::group_by(
-      .data$group_id, .data$name_abcd, .data$region, .data$scenario_source,
-      .data$sector, .data$technology, .data$year
+      .data$name_abcd,
+      .data$region,
+      .data$scenario_source,
+      .data$sector,
+      .data$technology,
+      .data$year
     ) %>%
     dplyr::rename(target = !!rlang::sym(target_scenario)) %>%
     dplyr::summarise(
@@ -147,7 +151,14 @@ remove_tech_no_plans_no_target <- function(data,
   data <- data %>%
     dplyr::anti_join(
       data_to_remove,
-      by = c("group_id", "name_abcd", "region", "scenario_source", "sector", "technology", "year")
+      by = c(
+        "name_abcd",
+        "region",
+        "scenario_source",
+        "sector",
+        "technology",
+        "year"
+      )
     )
 
   return(data)
@@ -157,8 +168,11 @@ remove_sector_no_target <- function(data,
                                     target_scenario) {
   data_to_remove_no_target_in_sector <- data %>%
     dplyr::group_by(
-      .data$group_id, .data$name_abcd, .data$region, .data$scenario_source,
-      .data$sector, .data$year
+      .data$name_abcd,
+      .data$region,
+      .data$scenario_source,
+      .data$sector,
+      .data$year
     ) %>%
     dplyr::rename(target = !!rlang::sym(target_scenario)) %>%
     dplyr::summarise(
@@ -171,7 +185,13 @@ remove_sector_no_target <- function(data,
   data <- data %>%
     dplyr::anti_join(
       data_to_remove_no_target_in_sector,
-      by = c("group_id", "name_abcd", "region", "scenario_source", "sector", "year")
+      by = c(
+        "name_abcd",
+        "region",
+        "scenario_source",
+        "sector",
+        "year"
+      )
     )
 
   return(data)
@@ -264,7 +284,6 @@ calculate_company_aggregate_alignment_tms <- function(data,
   # arrange output
   data <- data %>%
     dplyr::arrange(
-      .data$group_id,
       .data$sector,
       .data$name_abcd,
       .data$region,
@@ -281,8 +300,12 @@ add_net_absolute_scenario_value <- function(data,
     dplyr::mutate(
       net_absolute_scenario_value = sum(!!rlang::sym(target_scenario), na.rm = TRUE),
       .by = c(
-        "group_id", "name_abcd", "scenario_source", "region", "sector",
-        "activity_unit", "year"
+        "name_abcd",
+        "scenario_source",
+        "region",
+        "sector",
+        "activity_unit",
+        "year"
       )
     )
 
@@ -294,8 +317,14 @@ add_total_deviation <- function(data) {
     dplyr::summarise(
       total_deviation = sum(.data$total_tech_deviation, na.rm = TRUE),
       .by = c(
-        "group_id", "name_abcd", "scenario_source", "region", "sector",
-        "activity_unit", "year", "net_absolute_scenario_value", "direction"
+        "name_abcd",
+        "scenario_source",
+        "region",
+        "sector",
+        "activity_unit",
+        "year",
+        "net_absolute_scenario_value",
+        "direction"
       )
     )
 
@@ -311,8 +340,15 @@ calculate_company_alignment_metric <- function(data,
     ) %>%
     dplyr::select(
       c(
-        "group_id", "name_abcd", "sector", "activity_unit", "region",
-        "scenario_source", "scenario", "year", "direction", "total_deviation",
+        "name_abcd",
+        "sector",
+        "activity_unit",
+        "region",
+        "scenario_source",
+        "scenario",
+        "year",
+        "direction",
+        "total_deviation",
         "alignment_metric"
       )
     )
@@ -324,12 +360,12 @@ fill_missing_direction <- function(data) {
   # there is currently no way to use data masking inside tidyr::nesting()
   # see https://github.com/tidyverse/tidyr/issues/971#issuecomment-985671947
   # the following line is a workaround to avoid the R CMD NOTE
-  group_id <- name_abcd <- sector <- activity_unit <- region <- scenario_source <- scenario <- year <- NULL
+  name_abcd <- sector <- activity_unit <- region <- scenario_source <- scenario <- year <- NULL
 
   data <- data %>%
     tidyr::complete(
       tidyr::nesting(
-        group_id, name_abcd, sector, activity_unit, region, scenario_source, scenario, year # nolint: object_usage_linter.
+        name_abcd, sector, activity_unit, region, scenario_source, scenario, year # nolint: object_usage_linter.
       ),
       .data$direction,
       fill = list(
@@ -397,7 +433,6 @@ calculate_company_aggregate_alignment_sda <- function(data,
     add_total_deviation_sda() %>%
     calculate_company_alignment_metric(scenario = scenario) %>%
     dplyr::arrange(
-      .data$group_id,
       .data$sector,
       .data$name_abcd,
       .data$region,
@@ -438,7 +473,12 @@ add_total_deviation_sda <- function(data) {
     dplyr::mutate(
       total_deviation = (.data$projected - .data$net_absolute_scenario_value) * -1,
       .by = c(
-        "group_id", "name_abcd", "scenario_source", "region", "sector", "activity_unit", "year"
+        "name_abcd",
+        "scenario_source",
+        "region",
+        "sector",
+        "activity_unit",
+        "year"
       )
     )
 
@@ -551,7 +591,7 @@ validate_input_data_calculate_company_tech_deviation <- function(data,
     expected_columns = c(
       "sector", "technology", "year", "region", "scenario_source", "name_abcd",
       "metric", "production", "technology_share", "scope",
-      "percentage_of_initial_production_by_scope", "group_id"
+      "percentage_of_initial_production_by_scope"
     )
   )
 
@@ -614,7 +654,7 @@ validate_input_data_calculate_company_aggregate_alignment_tms <- function(data,
     data = data,
     expected_columns = c(
       "sector", "technology", "year", "region", "scenario_source", "name_abcd",
-      "group_id", "projected", paste0("target_", scenario), "direction",
+      "projected", paste0("target_", scenario), "direction",
       "total_tech_deviation", "activity_unit"
     )
   )
@@ -693,7 +733,7 @@ validate_input_data_calculate_company_aggregate_alignment_sda <- function(data) 
     data = data,
     expected_columns = c(
       "sector", "year", "region", "scenario_source", "name_abcd",
-      "emission_factor_metric", "emission_factor_value", "group_id"
+      "emission_factor_metric", "emission_factor_value"
     )
   )
 

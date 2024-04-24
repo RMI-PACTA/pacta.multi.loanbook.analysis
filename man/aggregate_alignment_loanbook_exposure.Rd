@@ -4,16 +4,32 @@
 \alias{aggregate_alignment_loanbook_exposure}
 \title{Return loan book level aggregation of company alignment metrics by exposure}
 \usage{
-aggregate_alignment_loanbook_exposure(data, matched, level = c("net", "bo_po"))
+aggregate_alignment_loanbook_exposure(
+  data,
+  matched,
+  level = c("net", "bo_po"),
+  .by = NULL
+)
 }
 \arguments{
-\item{data}{data.frame. Holds output pf company indicators}
+\item{data}{data.frame. Holds output of company indicators. Contains columns
+\code{"name_abcd"},    \code{"sector"},    \code{"activity_unit"},    \code{"region"},
+\code{"scenario_source"},    \code{"scenario"},    \code{"year"},    \code{"direction"},
+\code{"total_deviation"} and    \code{"alignment_metric"}.}
 
-\item{matched}{data.frame. Holds matched and prioritised loan book}
+\item{matched}{data.frame. Holds matched and prioritized loan book data.}
 
 \item{level}{Character. Vector that indicates if the aggregate alignment
 metric should be returned based on the net technology deviations (\code{net}) or
 disaggregated into buildout and phaseout technologies (\code{bo_po}).}
+
+\item{.by}{Character. Optionally, a selection of columns to group by. All
+columns indicated must be available variables in the \code{matched} data set.
+The intended use case is to allow analyzing the loan books by additional
+traits of interest, such as types of financial institutions. Default is
+\code{NULL}, which means the aggregation is done at the meta level. It is not
+possible to group by the critical columns of the \code{data} and \code{matched}
+inputs.}
 }
 \description{
 Return loan book level aggregation of company alignment metrics by exposure

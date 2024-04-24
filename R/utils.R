@@ -18,9 +18,9 @@ validate_data_has_expected_cols <- function(data,
   if (!data_has_expected_columns) {
     affected_cols <- glue::glue_collapse(sort(setdiff(expected_columns, names(data))), sep = ", ")
     rlang::abort(c(
-      "Must include expected columns in data set.",
+      "Must include expected columns in input data set.",
       x = glue::glue("Missing columns: {affected_cols}."),
-      i = "Please check that data have expected columns."
+      i = "Please check that data has expected columns."
     ))
   }
   invisible()
