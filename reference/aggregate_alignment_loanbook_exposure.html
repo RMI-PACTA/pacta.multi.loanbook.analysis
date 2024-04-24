@@ -6,11 +6,11 @@
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
     
 
-    <nav class="navbar fixed-top navbar-dark navbar-expand-lg bg-info"><div class="container">
+    <nav class="navbar fixed-top navbar-dark navbar-expand-lg bg-info" data-bs-theme="dark"><div class="container">
     
     <a class="navbar-brand me-2" href="../index.html">pacta.multi.loanbook.analysis</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.0.9002</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.0.9003</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -52,23 +52,41 @@
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">aggregate_alignment_loanbook_exposure</span><span class="op">(</span><span class="va">data</span>, <span class="va">matched</span>, level <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"net"</span>, <span class="st">"bo_po"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">aggregate_alignment_loanbook_exposure</span><span class="op">(</span></span>
+<span>  <span class="va">data</span>,</span>
+<span>  <span class="va">matched</span>,</span>
+<span>  level <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"net"</span>, <span class="st">"bo_po"</span><span class="op">)</span>,</span>
+<span>  .by <span class="op">=</span> <span class="cn">NULL</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
     <h2 id="arguments">Arguments<a class="anchor" aria-label="anchor" href="#arguments"></a></h2>
     <dl><dt>data</dt>
-<dd><p>data.frame. Holds output pf company indicators</p></dd>
+<dd><p>data.frame. Holds output of company indicators. Contains columns
+<code>"name_abcd"</code>,    <code>"sector"</code>,    <code>"activity_unit"</code>,    <code>"region"</code>,
+<code>"scenario_source"</code>,    <code>"scenario"</code>,    <code>"year"</code>,    <code>"direction"</code>,
+<code>"total_deviation"</code> and    <code>"alignment_metric"</code>.</p></dd>
 
 
 <dt>matched</dt>
-<dd><p>data.frame. Holds matched and prioritised loan book</p></dd>
+<dd><p>data.frame. Holds matched and prioritized loan book data.</p></dd>
 
 
 <dt>level</dt>
 <dd><p>Character. Vector that indicates if the aggregate alignment
 metric should be returned based on the net technology deviations (<code>net</code>) or
 disaggregated into buildout and phaseout technologies (<code>bo_po</code>).</p></dd>
+
+
+<dt>.by</dt>
+<dd><p>Character. Optionally, a selection of columns to group by. All
+columns indicated must be available variables in the <code>matched</code> data set.
+The intended use case is to allow analyzing the loan books by additional
+traits of interest, such as types of financial institutions. Default is
+<code>NULL</code>, which means the aggregation is done at the meta level. It is not
+possible to group by the critical columns of the <code>data</code> and <code>matched</code>
+inputs.</p></dd>
 
 </dl></div>
 
